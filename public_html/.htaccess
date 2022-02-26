@@ -1,0 +1,29 @@
+
+# BEGIN FRedirect_ErrorDocument
+# The directives (lines) between "BEGIN FRedirect_ErrorDocument" and "END FRedirect_ErrorDocument" are
+# dynamically generated, and should only be modified via WordPress filters.
+# Any changes to the directives between these markers will be overwritten.
+ErrorDocument 404 /index.php?error=404
+# END FRedirect_ErrorDocument
+# BEGIN DS-XML-RPC-API
+# The directives (lines) between "BEGIN DS-XML-RPC-API" and "END DS-XML-RPC-API" are
+# dynamically generated, and should only be modified via WordPress filters.
+# Any changes to the directives between these markers will be overwritten.
+<Files xmlrpc.php>
+order deny,allow 
+deny from all
+
+Allow from 122.248.245.244/32
+Allow from 54.217.201.243/32
+Allow from 54.232.116.4/32
+Allow from 192.0.80.0/20
+Allow from 192.0.96.0/20
+Allow from 192.0.112.0/20
+Allow from 195.234.108.0/22
+Allow from 192.0.96.202/32
+Allow from 192.0.98.138/32
+Allow from 192.0.102.71/32
+Allow from 192.0.102.95/32
+</Files>
+
+# END DS-XML-RPC-API

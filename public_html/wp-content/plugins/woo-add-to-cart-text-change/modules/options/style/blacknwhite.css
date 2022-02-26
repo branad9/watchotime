@@ -1,0 +1,113 @@
+/**
+* FrameWork Template: Black And White
+* Author: Saiful Islam <codersaiful@gmail.com>
+*
+* Perpose: To view different look on default Option framework of CodeStar
+*/
+
+div.csf-container .button-primary {
+    background: #000000;
+    border-color: #000000;
+    color: #fff;
+}
+
+div.csf-container .button-primary:hover,
+div.csf-container .button-primary:active,
+div.csf-container .button-primary:focus{
+    background: #484848;
+    border-color: #000000;
+    color: #ececec;
+}
+
+.csf-warning-primary {
+    color: #fff !important;
+    border-color: #dc3545 !important;
+    background: #dc3545 !important;
+}
+
+.csf-section-title {
+    background-color: #f9f9f9;
+    border-top: 3px solid #484848;
+    border-bottom: 1px solid #d6d6d6;
+    color: white !important;
+}
+.csf-section-title h3 {
+    color: black;
+}
+.csf-expand-all i.fa.fa-indent {
+    color: #989898;
+}
+.csf-field-switcher .csf--switcher {
+    background-color: #484848;
+}
+
+.csf-theme-dark .csf-footer {
+    color: #a5a5a5;
+    background-color: #000000;
+}
+.csf-theme-dark .csf-nav-background {
+    background-color: #fdfdfd;
+}
+.csf-theme-dark .csf-nav ul li .csf-section-active,.csf-theme-dark .csf-nav ul li .csf-section-active:hover {
+    color: #ffffff;
+    background-color: #484848;
+}
+.csf-theme-dark .csf-nav ul li a {
+    color: #000000;
+    background-color: #ffffff;
+    border-bottom: 1px solid #f3f2f2;
+}
+.csf-theme-dark .csf-header-inner {
+    background-color: #ffffff;
+    border-bottom: 3px solid #484848;
+}
+
+.csf-theme-dark .csf-search input {
+    background-color: #484848;
+}
+.csf-theme-dark .csf-expand-all {
+    color: #000000;
+    background-color: #e0e0e0;
+}
+.csf-theme-dark .csf-header-inner h1 small {
+    color: #c3c3c3;
+}
+.csf-theme-dark .csf-header-inner h1 {
+    color: #000000;
+    font-size: 22px;
+    font-weight: 300;
+}
+.csf-theme-dark .csf-nav ul li a:hover {
+    color: #000000;
+    font-weight: 500;
+}
+.csf-theme-dark .csf-nav ul ul li .csf-section-active {
+    background-color: #000000;
+    color: #ffffff;
+}
+.csf-theme-dark .csf-nav ul ul li a {
+    background-color: #f1f1f1;
+    border-bottom: 1px solid #ffffff;
+}
+.ultraaddons_pro_features {
+    opacity: 1;
+    position: relative;
+    overflow: hidden;
+}
+.ultraaddons_pro_features>div {
+    opacity: .7;
+}
+div.ultraaddons_pro_features:before {
+    content: "Pro Features";
+    background: #48606b40;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 99999999;
+    color: #dc592f;
+    padding: 5px 12px;
+    font-weight: 500;
+    text-align: left;
+}

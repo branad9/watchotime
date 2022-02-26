@@ -1,0 +1,78 @@
+/**
+* FrameWork Template: Contrast
+* Author: Saiful Islam <codersaiful@gmail.com>
+*
+* Perpose: To view different look on default Option framework of CodeStar
+*/
+.csf-field-notice,div.csf-section {
+    background: #607d8b4d;
+}
+
+.csf-theme-dark .csf-footer {
+    color: #ff3d00;
+    background-color: #691900;
+}
+.csf-theme-dark .csf-nav-background {
+    background-color: #FF5722;
+}
+.csf-theme-dark .csf-nav ul li .csf-section-active,.csf-theme-dark .csf-nav ul li .csf-section-active:hover {
+    color: #fafdff;
+    background-color: #f73b00;
+}
+.csf-theme-dark .csf-nav ul li a {
+    color: #020000;
+    background-color: #FFC107;
+    border-bottom: 1px solid #fdad37;
+}
+.csf-theme-dark .csf-header-inner {
+    background-color: #FF5722;
+}
+
+.csf-theme-dark .csf-search input {
+    background-color: #fdfeff;
+}
+.csf-theme-dark .csf-expand-all {
+    color: #ff5722;
+    background-color: #000000;
+}
+.csf-theme-dark .csf-header-inner h1 small {
+    color: #FFEB3B;
+}
+.csf-theme-dark .csf-header-inner h1 {
+    color: #000000;
+    font-size: 22px;
+    font-weight: 600;
+}
+.csf-theme-dark .csf-nav ul li a:hover {
+    color: #0a0200;
+}
+.csf-theme-dark .csf-nav ul ul li .csf-section-active {
+    background-color: #9C27B0;
+    color: #ffffff;
+}
+.csf-theme-dark .csf-nav ul ul li a {
+    background-color: #4CAF50;
+    border-bottom: 1px solid #449c47;
+}
+.ultraaddons_pro_features {
+    opacity: 1;
+    position: relative;
+    overflow: hidden;
+}
+.ultraaddons_pro_features>div {
+    opacity: .7;
+}
+div.ultraaddons_pro_features:before {
+    content: "Pro Features";
+    background: #48606b40;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 99999999;
+    color: #dc592f;
+    padding: 5px 12px;
+    font-weight: 500;
+    text-align: left;
+}
