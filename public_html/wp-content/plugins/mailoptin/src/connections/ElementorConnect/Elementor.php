@@ -3,6 +3,7 @@
 namespace MailOptin\ElementorConnect;
 
 use Elementor\Controls_Manager;
+use Elementor\Repeater;
 use ElementorPro\Modules\Forms\Classes\Action_Base;
 use ElementorPro\Modules\Forms\Controls\Fields_Map;
 use MailOptin\Core\AjaxHandler;
@@ -42,6 +43,9 @@ class Elementor extends Action_Base
         if (Init::is_mailoptin_detach_libsodium()) {
             $connections['leadbank'] = __('MailOptin Leads', 'mailoptin');
         }
+
+        //escape webhook connection
+        unset($connections['WebHookConnect']);
 
         return $connections;
     }
@@ -138,22 +142,19 @@ class Elementor extends Action_Base
                 ]
             );
 
+            $repeater = new Repeater();
+
+            $repeater->add_control('remote_id', ['type' => Controls_Manager::HIDDEN]);
+
+            $repeater->add_control('local_id', ['type' => Controls_Manager::SELECT]);
+
             $widget->add_control(
                 'mailoptin_fields_map',
                 [
                     'label'     => __('Field Mapping', 'mailoptin'),
                     'type'      => Fields_Map::CONTROL_TYPE,
                     'separator' => 'before',
-                    'fields'    => [
-                        [
-                            'name' => 'remote_id',
-                            'type' => Controls_Manager::HIDDEN,
-                        ],
-                        [
-                            'name' => 'local_id',
-                            'type' => Controls_Manager::SELECT,
-                        ],
-                    ]
+                    'fields'    => $repeater->get_controls()
                 ]
             );
         } else {
@@ -263,7 +264,9 @@ class Elementor extends Action_Base
             }
         }
 
-        $response = AjaxHandler::do_optin_conversion($optin_data);
+        $response = AjaxHandler::do_optin_conversion(
+            apply_filters('mo_connections_elementor_optin_data', $optin_data, $record)
+        );
 
         if ($response['success'] === false) {
             $ajax_handler->add_error_message($response['message']);

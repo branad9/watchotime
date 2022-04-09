@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace MailOptin\SendFoxConnect;
 
@@ -65,7 +65,9 @@ class Connect extends AbstractSendFoxConnect implements ConnectionInterface
             $response = $this->sendfox_instance()->make_request('lists');
             $response = $response['body'];
 
-            if (is_array($response['data'])) {
+            $lists_array = [];
+
+            if (isset($response['data']) && is_array($response['data'])) {
 
                 foreach ($response['data'] as $list) {
                     $lists_array[$list['id']] = $list['name'];
@@ -76,6 +78,8 @@ class Connect extends AbstractSendFoxConnect implements ConnectionInterface
 
         } catch (\Exception $e) {
             self::save_optin_error_log($e->getMessage(), 'sendfox');
+
+            return [];
         }
     }
 
@@ -102,9 +106,9 @@ class Connect extends AbstractSendFoxConnect implements ConnectionInterface
      * @param string $content_html
      * @param string $content_text
      *
+     * @return array
      * @throws \Exception
      *
-     * @return array
      */
     public function send_newsletter($email_campaign_id, $campaign_log_id, $subject, $content_html, $content_text)
     {

@@ -243,6 +243,9 @@ class GFMailOptin extends \GFFeedAddOn
             $connections['leadbank'] = __('MailOptin Leads', 'mailoptin');
         }
 
+        //escape webhook connection
+        unset($connections['WebHookConnect']);
+
         return $connections;
     }
 

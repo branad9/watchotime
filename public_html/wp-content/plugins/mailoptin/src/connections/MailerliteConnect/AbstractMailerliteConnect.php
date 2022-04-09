@@ -72,9 +72,9 @@ class AbstractMailerliteConnect extends AbstractConnect
     /**
      * Returns instance of API class.
      *
+     * @return MailerLite
      * @throws \Exception
      *
-     * @return MailerLite
      */
     public function mailerlite_instance()
     {

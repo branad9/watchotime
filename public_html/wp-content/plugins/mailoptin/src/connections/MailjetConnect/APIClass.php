@@ -68,12 +68,16 @@ class APIClass
             throw new \Exception($response->get_error_message());
         }
 
+        $response_body = wp_remote_retrieve_body($response);
+
         //Check if the request was successfully authorized
         if (401 == wp_remote_retrieve_response_code($response)) {
-            throw new \Exception(esc_html__('You have specified an incorrect API Key / API Secret Key pair. You may be unauthorized to access the API or your API key may be inactive.', 'mailoptin'));
+            throw new \Exception(
+                is_string($response_body) ? $response_body : esc_html__('You have specified an incorrect API Key / API Secret Key pair. You may be unauthorized to access the API or your API key may be inactive.', 'mailoptin')
+            );
         }
 
-        $response_body = json_decode(wp_remote_retrieve_body($response));
+        $response_body = json_decode($response_body);
 
         //Throw any errors returned by the api
         if ( ! empty($response_body->ErrorMessage) || ! empty($response_body->Errors)) {
@@ -101,7 +105,7 @@ class APIClass
     public function get_lists($count = 1000)
     {
         //Prepare args then fetch the lists
-        $args  = [
+        $args = [
             'Limit'     => $count,
             'IsDeleted' => false
 

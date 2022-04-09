@@ -254,6 +254,7 @@ trait CustomizerTrait
         $zohocrm_label     = __('ZohoCRM Modules', 'mailoptin');
         $fbca_label        = __('Custom Audience', 'mailoptin');
         $jilt_label        = __('Select Linked Store', 'mailoptin');
+        $webhook_label     = __('Request Method', 'mailoptin');
         $default_label     = __('Select Email List', 'mailoptin');
         ?>
         <script type="text/javascript">
@@ -287,6 +288,10 @@ trait CustomizerTrait
 
                         if (connection_service === 'JiltConnect') {
                             title_obj.text('<?php echo $jilt_label; ?>');
+                        }
+
+                        if (connection_service === 'WebHookConnect') {
+                            title_obj.text('<?php echo $webhook_label; ?>');
                         }
 
                         if (connection_service === 'WordPressUserRegistrationConnect') {
@@ -326,6 +331,10 @@ trait CustomizerTrait
                                     title_obj.text('<?php echo $jilt_label; ?>');
                                 }
 
+                                if (connection_service === 'WebHookConnect') {
+                                    title_obj.text('<?php echo $webhook_label; ?>');
+                                }
+
                                 if (connection_service === 'WordPressUserRegistrationConnect') {
                                     title_obj.text('<?php echo $wp_user_reg_label; ?>');
                                 }
@@ -360,6 +369,10 @@ trait CustomizerTrait
                                 title_obj.text('<?php echo $jilt_label; ?>');
                             }
 
+                            if (connection_service === 'WebHookConnect') {
+                                title_obj.text('<?php echo $webhook_label; ?>');
+                            }
+
                             if (connection_service === 'WordPressUserRegistrationConnect') {
                                 title_obj.text('<?php echo $wp_user_reg_label; ?>');
                             }
@@ -392,7 +405,6 @@ trait CustomizerTrait
     {
         // Enable rich editing for this view (Overrides 'Disable the visual editor when writing' option for current user)
         add_filter('user_can_richedit', '__return_true');
-        wp_enqueue_editor();
         wp_enqueue_editor();
 
         if ( ! empty($GLOBALS['post'])) {

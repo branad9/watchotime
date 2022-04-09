@@ -10,11 +10,13 @@ use MailOptin\Core\PluginSettings\Settings;
 
 class AbstractFacebookCustomAudienceConnect extends AbstractConnect
 {
-    /** @var \MailOptin\Core\PluginSettings\Settings */
+    /** @var Settings */
     protected $plugin_settings;
 
-    /** @var \MailOptin\Core\PluginSettings\Connections */
+    /** @var Connections */
     protected $connections_settings;
+
+    public static $api_version = '11.0';
 
     public function __construct()
     {
@@ -31,7 +33,7 @@ class AbstractFacebookCustomAudienceConnect extends AbstractConnect
      */
     public static function is_connected($return_error = false)
     {
-        $db_options        = $db_options = isset($_POST['mailoptin_connections']) ? $_POST['mailoptin_connections'] : get_option(MAILOPTIN_CONNECTIONS_DB_OPTION_NAME);
+        $db_options        = isset($_POST['mailoptin_connections']) ? $_POST['mailoptin_connections'] : get_option(MAILOPTIN_CONNECTIONS_DB_OPTION_NAME);
         $fbca_app_id       = isset($db_options['fbca_app_id']) ? $db_options['fbca_app_id'] : '';
         $fbca_app_secret   = isset($db_options['fbca_app_secret']) ? $db_options['fbca_app_secret'] : '';
         $fbca_adaccount_id = isset($db_options['fbca_adaccount_id']) ? $db_options['fbca_adaccount_id'] : '';
@@ -107,6 +109,10 @@ class AbstractFacebookCustomAudienceConnect extends AbstractConnect
         $fbca_app_secret       = $this->connections_settings->fbca_app_secret();
         $fbca_app_access_token = $this->connections_settings->fbca_app_access_token();
         $fbca_adaccount_id     = $this->connections_settings->fbca_adaccount_id();
+        $fbca_api_version      = $this->connections_settings->fbca_api_version();
+        if (empty($fbca_api_version)) {
+            $fbca_api_version = self::$api_version;
+        }
 
         if (empty($fbca_app_id)) {
             throw new \Exception(__('Facebook App ID not found.', 'mailoptin'));
@@ -134,7 +140,7 @@ class AbstractFacebookCustomAudienceConnect extends AbstractConnect
             'keys'         => ['id' => $fbca_app_id, 'secret' => $fbca_app_secret],
             'scope'        => 'ads_management',
             'access_token' => $fbca_app_access_token,
-            'apiVersion'   => apply_filters('mo_facebook_custom_audience_api_version', '9.0')
+            'apiVersion'   => apply_filters('mo_facebook_custom_audience_api_version', $fbca_api_version)
         ];
 
         return new Facebook($config, null, new OAuthCredentialStorage());

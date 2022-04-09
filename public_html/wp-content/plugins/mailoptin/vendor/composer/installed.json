@@ -1,6 +1,54 @@
 {
     "packages": [
         {
+            "name": "barryvdh/composer-cleanup-plugin",
+            "version": "dev-master",
+            "version_normalized": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mailoptin/composer-cleanup-plugin.git",
+                "reference": "74d878666436c99f5b671b90312e85479afeedb0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mailoptin/composer-cleanup-plugin/zipball/74d878666436c99f5b671b90312e85479afeedb0",
+                "reference": "74d878666436c99f5b671b90312e85479afeedb0",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^2.0"
+            },
+            "time": "2022-03-15T13:35:33+00:00",
+            "default-branch": true,
+            "type": "composer-plugin",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1-dev"
+                },
+                "class": "Barryvdh\\Composer\\CleanupPlugin"
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Barryvdh\\Composer\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Barry vd. Heuvel",
+                    "email": "barryvdh@gmail.com"
+                }
+            ],
+            "description": "A composer cleanup plugin, to remove tests and documentation to save space",
+            "support": {
+                "source": "https://github.com/mailoptin/composer-cleanup-plugin/tree/master"
+            },
+            "install-path": "../barryvdh/composer-cleanup-plugin"
+        },
+        {
             "name": "collizo4sky/persist-admin-notices-dismissal",
             "version": "1.4.4",
             "version_normalized": "1.4.4.0",
@@ -46,17 +94,17 @@
         },
         {
             "name": "composer/installers",
-            "version": "v1.11.0",
-            "version_normalized": "1.11.0.0",
+            "version": "v1.12.0",
+            "version_normalized": "1.12.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/installers.git",
-                "reference": "ae03311f45dfe194412081526be2e003960df74b"
+                "reference": "d20a64ed3c94748397ff5973488761b22f6d3f19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/installers/zipball/ae03311f45dfe194412081526be2e003960df74b",
-                "reference": "ae03311f45dfe194412081526be2e003960df74b",
+                "url": "https://api.github.com/repos/composer/installers/zipball/d20a64ed3c94748397ff5973488761b22f6d3f19",
+                "reference": "d20a64ed3c94748397ff5973488761b22f6d3f19",
                 "shasum": ""
             },
             "require": {
@@ -74,7 +122,7 @@
                 "symfony/phpunit-bridge": "^4.2 || ^5",
                 "symfony/process": "^2.3"
             },
-            "time": "2021-04-28T06:42:17+00:00",
+            "time": "2021-09-13T08:19:44+00:00",
             "type": "composer-plugin",
             "extra": {
                 "class": "Composer\\Installers\\Plugin",
@@ -157,6 +205,7 @@
                 "modx",
                 "moodle",
                 "osclass",
+                "pantheon",
                 "phpbb",
                 "piwik",
                 "ppi",
@@ -179,7 +228,7 @@
             ],
             "support": {
                 "issues": "https://github.com/composer/installers/issues",
-                "source": "https://github.com/composer/installers/tree/v1.11.0"
+                "source": "https://github.com/composer/installers/tree/v1.12.0"
             },
             "funding": [
                 {
@@ -245,26 +294,28 @@
         },
         {
             "name": "drewm/drip",
-            "version": "v0.7",
-            "version_normalized": "0.7.0.0",
+            "version": "v0.9",
+            "version_normalized": "0.9.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/drewm/drip.git",
-                "reference": "3d4afe4c8fb3d602bd82adbbd3838801eb645633"
+                "reference": "e79edf4104bf595e020e281973e476832bfb024c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/drewm/drip/zipball/3d4afe4c8fb3d602bd82adbbd3838801eb645633",
-                "reference": "3d4afe4c8fb3d602bd82adbbd3838801eb645633",
+                "url": "https://api.github.com/repos/drewm/drip/zipball/e79edf4104bf595e020e281973e476832bfb024c",
+                "reference": "e79edf4104bf595e020e281973e476832bfb024c",
                 "shasum": ""
             },
             "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
                 "php": ">=5.4"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.0.*"
+                "phpunit/phpunit": "7.5.*"
             },
-            "time": "2017-01-22T11:45:11+00:00",
+            "time": "2019-01-31T10:37:53+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -288,7 +339,7 @@
             ],
             "support": {
                 "issues": "https://github.com/drewm/drip/issues",
-                "source": "https://github.com/drewm/drip/tree/v0.7"
+                "source": "https://github.com/drewm/drip/tree/master"
             },
             "install-path": "../drewm/drip"
         },
@@ -399,12 +450,12 @@
             },
             "installation-source": "dist",
             "autoload": {
-                "psr-4": {
-                    "League\\Csv\\": "src"
-                },
                 "files": [
                     "src/functions_include.php"
-                ]
+                ],
+                "psr-4": {
+                    "League\\Csv\\": "src"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -439,11 +490,11 @@
         },
         {
             "name": "mailoptin/authifly",
-            "version": "0.2.1626965321",
-            "version_normalized": "0.2.1626965321.0",
+            "version": "0.2.1647346561",
+            "version_normalized": "0.2.1647346561.0",
             "dist": {
                 "type": "zip",
-                "url": "https://php.fury.io/uDXRvLf8b2ywvgcokC7z/mailoptin/~/up/ver_1AUjkq/mailoptinauthifly-0-2-1626965321.zip"
+                "url": "https://php.fury.io/uDXRvLf8b2ywvgcokC7z/mailoptin/~/up/ver_14yVWR/mailoptinauthifly-0-2-1647346561.zip"
             },
             "require": {
                 "composer/installers": "~1.0",
@@ -489,17 +540,17 @@
         },
         {
             "name": "mailoptin/connections",
-            "version": "0.2.1626968223",
-            "version_normalized": "0.2.1626968223.0",
+            "version": "0.2.1647346604",
+            "version_normalized": "0.2.1647346604.0",
             "dist": {
                 "type": "zip",
-                "url": "https://php.fury.io/uDXRvLf8b2ywvgcokC7z/mailoptin/~/up/ver_Ui6gG/mailoptinconnections-0-2-1626968223.zip"
+                "url": "https://php.fury.io/uDXRvLf8b2ywvgcokC7z/mailoptin/~/up/ver_2ceJxh/mailoptinconnections-0-2-1647346604.zip"
             },
             "require": {
                 "composer/installers": "~1.0",
                 "deliciousbrains/wp-background-processing": "^1.0",
-                "drewm/drip": "^0.7.0",
-                "thinkshout/mailchimp-api-php": "^1.0"
+                "drewm/drip": "^0.9",
+                "mailoptin/mailchimp-api-php": "^2.0"
             },
             "replace": {
                 "guzzlehttp/guzzle": "*"
@@ -554,6 +605,8 @@
                     "MailOptin\\WPMLConnect\\": "WPMLConnect/",
                     "MailOptin\\FormidableFormConnect\\": "FormidableFormConnect/",
                     "MailOptin\\ForminatorFormConnect\\": "ForminatorFormConnect/",
+                    "MailOptin\\WebHookConnect\\": "WebHookConnect/",
+                    "MailOptin\\WooCommerceConnect\\": "WooCommerceConnect/",
                     "MailOptin\\FacebookCustomAudienceConnect\\": "FacebookCustomAudienceConnect/",
                     "MailOptin\\Connections\\": "./"
                 },
@@ -566,17 +619,17 @@
         },
         {
             "name": "mailoptin/core",
-            "version": "0.1.0-alpha.1627125228",
-            "version_normalized": "0.1.0.0-alpha1627125228",
+            "version": "0.1.0-alpha.1647346598",
+            "version_normalized": "0.1.0.0-alpha1647346598",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mailoptin/core.git",
-                "reference": "91f3459954bdbdef407537ee4dcc9c76d93fbcca"
+                "reference": "122ebcde19a39eff59108539711b2bf73c32b499"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mailoptin/core/zipball/91f3459954bdbdef407537ee4dcc9c76d93fbcca",
-                "reference": "91f3459954bdbdef407537ee4dcc9c76d93fbcca",
+                "url": "https://api.github.com/repos/mailoptin/core/zipball/122ebcde19a39eff59108539711b2bf73c32b499",
+                "reference": "122ebcde19a39eff59108539711b2bf73c32b499",
                 "shasum": ""
             },
             "require": {
@@ -588,26 +641,73 @@
                 "soundasleep/html2text": "~0.5",
                 "symfony/polyfill-mbstring": "1.19.0"
             },
-            "time": "2021-07-24T11:13:00+00:00",
+            "time": "2022-03-15T12:09:54+00:00",
             "type": "wordpress-plugin",
             "installation-source": "dist",
             "autoload": {
-                "psr-4": {
-                    "MailOptin\\Core\\": "src/"
-                },
                 "files": [
                     "src/Functions/custom-settings-api.php",
                     "src/Functions/functions.php",
-                    "src/Functions/php-html-css-js-minifier.php"
-                ]
+                    "src/Functions/php-html-css-js-minifier.php",
+                    "src/Functions/MoBFnote.php"
+                ],
+                "psr-4": {
+                    "MailOptin\\Core\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "description": "Core lib for MailOptin",
             "support": {
                 "issues": "https://github.com/mailoptin/core/issues",
-                "source": "https://github.com/mailoptin/core/tree/0.1.0-alpha.1627125228"
+                "source": "https://github.com/mailoptin/core/tree/0.1.0-alpha.1647346598"
             },
             "install-path": "../../src/core"
+        },
+        {
+            "name": "mailoptin/mailchimp-api-php",
+            "version": "2.1.2",
+            "version_normalized": "2.1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mailoptin/mailchimp-api-php.git",
+                "reference": "5a7d9943ddda7b3fd2fb4080dfb3a92745750173"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mailoptin/mailchimp-api-php/zipball/5a7d9943ddda7b3fd2fb4080dfb3a92745750173",
+                "reference": "5a7d9943ddda7b3fd2fb4080dfb3a92745750173",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.2.1|^7.0.0",
+                "php": ">=5.4.0"
+            },
+            "replace": {
+                "thinkshout/mailchimp-api-php": "^1.0|^2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.2.2"
+            },
+            "time": "2021-08-14T10:48:55+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Mailchimp\\": "src/",
+                    "Mailchimp\\http\\": "src/http/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "description": "PHP library for v3 of the MailChimp API",
+            "homepage": "https://github.com/thinkshout/mailchimp-api-php",
+            "keywords": [
+                "mail",
+                "mailchimp"
+            ],
+            "support": {
+                "source": "https://github.com/mailoptin/mailchimp-api-php/tree/2.1.2"
+            },
+            "install-path": "../mailoptin/mailchimp-api-php"
         },
         {
             "name": "nesbot/carbon",
@@ -818,23 +918,24 @@
         },
         {
             "name": "symfony/css-selector",
-            "version": "v5.3.0",
-            "version_normalized": "5.3.0.0",
+            "version": "v5.4.3",
+            "version_normalized": "5.4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
-                "reference": "fcd0b29a7a0b1bb5bfbedc6231583d77fea04814"
+                "reference": "b0a190285cd95cb019237851205b8140ef6e368e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/css-selector/zipball/fcd0b29a7a0b1bb5bfbedc6231583d77fea04814",
-                "reference": "fcd0b29a7a0b1bb5bfbedc6231583d77fea04814",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/b0a190285cd95cb019237851205b8140ef6e368e",
+                "reference": "b0a190285cd95cb019237851205b8140ef6e368e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2.5"
+                "php": ">=7.2.5",
+                "symfony/polyfill-php80": "^1.16"
             },
-            "time": "2021-05-26T17:40:38+00:00",
+            "time": "2022-01-02T09:53:40+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -866,7 +967,7 @@
             "description": "Converts CSS selectors to XPath expressions",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/css-selector/tree/v5.3.0"
+                "source": "https://github.com/symfony/css-selector/tree/v5.4.3"
             },
             "funding": [
                 {
@@ -918,12 +1019,12 @@
             },
             "installation-source": "dist",
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Mbstring\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Mbstring\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -968,23 +1069,110 @@
             "install-path": "../symfony/polyfill-mbstring"
         },
         {
-            "name": "symfony/translation",
-            "version": "v4.4.26",
-            "version_normalized": "4.4.26.0",
+            "name": "symfony/polyfill-php80",
+            "version": "v1.25.0",
+            "version_normalized": "1.25.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/translation.git",
-                "reference": "2f7fa60b8d10ca71c30dc46b0870143183a8f131"
+                "url": "https://github.com/symfony/polyfill-php80.git",
+                "reference": "4407588e0d3f1f52efb65fbe92babe41f37fe50c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/2f7fa60b8d10ca71c30dc46b0870143183a8f131",
-                "reference": "2f7fa60b8d10ca71c30dc46b0870143183a8f131",
+                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/4407588e0d3f1f52efb65fbe92babe41f37fe50c",
+                "reference": "4407588e0d3f1f52efb65fbe92babe41f37fe50c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "time": "2022-03-04T08:16:47+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.23-dev"
+                },
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php80\\": ""
+                },
+                "classmap": [
+                    "Resources/stubs"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ion Bazan",
+                    "email": "ion.bazan@gmail.com"
+                },
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill backporting some PHP 8.0+ features to lower PHP versions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-php80/tree/v1.25.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "install-path": "../symfony/polyfill-php80"
+        },
+        {
+            "name": "symfony/translation",
+            "version": "v4.4.37",
+            "version_normalized": "4.4.37.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/translation.git",
+                "reference": "4ce00d6875230b839f5feef82e51971f6c886e00"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/4ce00d6875230b839f5feef82e51971f6c886e00",
+                "reference": "4ce00d6875230b839f5feef82e51971f6c886e00",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.1.3",
                 "symfony/polyfill-mbstring": "~1.0",
+                "symfony/polyfill-php80": "^1.16",
                 "symfony/translation-contracts": "^1.1.6|^2"
             },
             "conflict": {
@@ -997,7 +1185,7 @@
                 "symfony/translation-implementation": "1.0|2.0"
             },
             "require-dev": {
-                "psr/log": "~1.0",
+                "psr/log": "^1|^2|^3",
                 "symfony/config": "^3.4|^4.0|^5.0",
                 "symfony/console": "^3.4|^4.0|^5.0",
                 "symfony/dependency-injection": "^3.4|^4.0|^5.0",
@@ -1012,7 +1200,7 @@
                 "symfony/config": "",
                 "symfony/yaml": ""
             },
-            "time": "2021-06-06T08:51:46+00:00",
+            "time": "2022-01-02T09:41:36+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1040,7 +1228,7 @@
             "description": "Provides tools to internationalize your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/translation/tree/v4.4.26"
+                "source": "https://github.com/symfony/translation/tree/v4.4.37"
             },
             "funding": [
                 {
@@ -1060,17 +1248,17 @@
         },
         {
             "name": "symfony/translation-contracts",
-            "version": "v2.4.0",
-            "version_normalized": "2.4.0.0",
+            "version": "v2.5.0",
+            "version_normalized": "2.5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation-contracts.git",
-                "reference": "95c812666f3e91db75385749fe219c5e494c7f95"
+                "reference": "d28150f0f44ce854e942b671fc2620a98aae1b1e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation-contracts/zipball/95c812666f3e91db75385749fe219c5e494c7f95",
-                "reference": "95c812666f3e91db75385749fe219c5e494c7f95",
+                "url": "https://api.github.com/repos/symfony/translation-contracts/zipball/d28150f0f44ce854e942b671fc2620a98aae1b1e",
+                "reference": "d28150f0f44ce854e942b671fc2620a98aae1b1e",
                 "shasum": ""
             },
             "require": {
@@ -1079,11 +1267,11 @@
             "suggest": {
                 "symfony/translation-implementation": ""
             },
-            "time": "2021-03-23T23:28:01+00:00",
+            "time": "2021-08-17T14:20:01+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "2.4-dev"
+                    "dev-main": "2.5-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -1121,7 +1309,7 @@
                 "standards"
             ],
             "support": {
-                "source": "https://github.com/symfony/translation-contracts/tree/v2.4.0"
+                "source": "https://github.com/symfony/translation-contracts/tree/v2.5.0"
             },
             "funding": [
                 {
@@ -1138,50 +1326,6 @@
                 }
             ],
             "install-path": "../symfony/translation-contracts"
-        },
-        {
-            "name": "thinkshout/mailchimp-api-php",
-            "version": "1.0.10",
-            "version_normalized": "1.0.10.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/thinkshout/mailchimp-api-php.git",
-                "reference": "a409932715ae6b48fae8cc2bae264b4328d17541"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/thinkshout/mailchimp-api-php/zipball/a409932715ae6b48fae8cc2bae264b4328d17541",
-                "reference": "a409932715ae6b48fae8cc2bae264b4328d17541",
-                "shasum": ""
-            },
-            "require": {
-                "guzzlehttp/guzzle": "^6.2.1",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^6.2.2"
-            },
-            "time": "2017-12-27T21:13:18+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "Mailchimp\\": "src/",
-                    "Mailchimp\\http\\": "src/http/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "description": "PHP library for v3 of the MailChimp API",
-            "homepage": "https://github.com/thinkshout/mailchimp-api-php",
-            "keywords": [
-                "mail",
-                "mailchimp"
-            ],
-            "support": {
-                "issues": "https://github.com/thinkshout/mailchimp-api-php/issues",
-                "source": "https://github.com/thinkshout/mailchimp-api-php/tree/master"
-            },
-            "install-path": "../thinkshout/mailchimp-api-php"
         }
     ],
     "dev": false,

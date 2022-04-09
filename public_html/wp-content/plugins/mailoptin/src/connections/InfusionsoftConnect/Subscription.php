@@ -205,7 +205,7 @@ class Subscription extends AbstractInfusionsoftConnect
                 $properties['addresses'] = array_values($properties['addresses']);
             }
 
-            $properties = apply_filters('mo_connections_infusionsoft_optin_payload', array_filter($properties, [$this, 'data_filter']));
+            $properties = apply_filters('mo_connections_infusionsoft_optin_payload', array_filter($properties, [$this, 'data_filter']), $this);
 
             $response = $this->infusionsoftInstance()->addUpdateSubscriber($properties);
 

@@ -1,0 +1,9 @@
+¢˚6b<?php exit; ?>a:1:{s:7:"content";O:8:"stdClass":23:{s:2:"ID";s:4:"2156";s:11:"post_author";s:1:"2";s:9:"post_date";s:19:"2021-03-16 12:54:37";s:13:"post_date_gmt";s:19:"2021-03-16 07:24:37";s:12:"post_content";s:458:"Audemars Piguet Royal Oak First Copy Replica it has 37 mm stainless steel case, 9.8 mm thick, glare-proof sapphire crystal back, glare-proofed sapphire crystal, ruthenium-toned dial with Grande Tapisserie‚Äù pattern, Royal Oak hands with luminescent coating, Calibre 3120 self-winding movement with dive-time measurement, hours, minutes, center seconds and date, approximately 60 hours of power reserve, stainless steel bracelet, AP folding buckle.
+
+&nbsp;";s:10:"post_title";s:44:"Audemars Piguet Royal Oak First Copy Replica";s:12:"post_excerpt";s:268:"<ul>
+ 	<li><strong>Brand</strong> Audemars Piguet</li>
+ 	<li><strong>Range</strong> Royal Oak</li>
+ 	<li><strong>Gender</strong> Men's</li>
+ 	<li><strong>Movement</strong>¬† Calibre 3120 self-winding Movement</li>
+ 	<li><strong>Case Size</strong> 37mm</li>
+</ul>";s:11:"post_status";s:7:"publish";s:14:"comment_status";s:4:"open";s:11:"ping_status";s:6:"closed";s:13:"post_password";s:0:"";s:9:"post_name";s:44:"audemars-piguet-royal-oak-first-copy-replica";s:7:"to_ping";s:0:"";s:6:"pinged";s:0:"";s:13:"post_modified";s:19:"2021-03-28 12:27:48";s:17:"post_modified_gmt";s:19:"2021-03-28 06:57:48";s:21:"post_content_filtered";s:0:"";s:11:"post_parent";s:1:"0";s:4:"guid";s:58:"https://watchotimeonline.in/?post_type=product&#038;p=2156";s:10:"menu_order";s:1:"0";s:9:"post_type";s:7:"product";s:14:"post_mime_type";s:0:"";s:13:"comment_count";s:1:"0";}}

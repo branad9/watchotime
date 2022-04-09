@@ -679,6 +679,18 @@ HTML;
                         'priority'    => 95
                     )
                 ),
+                'acf_shortcode'                    => new WP_Customize_View_Tags_Shortcode_Content(
+                    $this->wp_customize,
+                    $this->option_prefix . '[acf_shortcode]',
+                    array(
+                        'label'       => __('ACF Field', 'mailoptin'),
+                        'section'     => $this->customizerClassInstance->campaign_view_tags_section_id,
+                        'content'     => '<input type="text" value="[acf-field field=' . esc_attr('"field_name"') . ' format_value=' . esc_attr('"true"') . ']" style="background-color:#fff;" readonly>',
+                        'settings'    => $this->option_prefix . '[acf_shortcode]',
+                        'description' => __('ACF value of a certain "field_name".', 'mailoptin'),
+                        'priority'    => 98
+                    )
+                ),
                 'post_id_shortcode'                => new WP_Customize_View_Tags_Shortcode_Content(
                     $this->wp_customize,
                     $this->option_prefix . '[post_id_shortcode]',
@@ -870,6 +882,10 @@ HTML;
             $this->customizerClassInstance
         );
 
+        if ( ! class_exists('ACF')) {
+            unset($control_args['acf_shortcode']);
+        }
+
         if ($this->customizerClassInstance->email_campaign_type != ER::POSTS_EMAIL_DIGEST) {
             unset($control_args['email_digest_tag_help']);
         }
@@ -971,7 +987,10 @@ HTML;
                     $this->option_prefix . '[send_test_email]',
                     array(
                         'label'       => __('Background Color', 'mailoptin'),
-                        'description' => __("Save any changes first and then click the button to send the test email. If empty, it will be sent to " . mo_test_admin_email(), 'mailoptin'),
+                        'description' => sprintf(
+                            esc_html__("%sSave changes after entering an email address%s before clicking the button to send the test email. If empty, it will be sent to " . mo_test_admin_email(), 'mailoptin'),
+                            '<strong>', '</strong>'
+                        ),
                         'section'     => $this->customizerClassInstance->campaign_send_email_section_id,
                         'settings'    => $this->option_prefix . '[send_test_email]',
                         'priority'    => 20

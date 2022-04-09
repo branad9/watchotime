@@ -85,6 +85,11 @@ class ConnectSettingsPage
                     __('Enter your Facebook Ad account ID. %sLearn more%s', 'mailoptin'),
                     '<a target="_blank" href="' . $learn_more_link . '">', '</a>'
                 )
+            ],
+            'fbca_api_version'             => [
+                'type'  => 'text',
+                'label' => __('API Version', 'mailoptin'),
+                'value' => AbstractFacebookCustomAudienceConnect::$api_version
             ]
         ];
 

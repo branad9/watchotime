@@ -6,24 +6,14 @@ use Authifly\Provider\ConstantContact;
 use Authifly\Storage\OAuthCredentialStorage;
 use MailOptin\Core\Connections\AbstractConnect;
 use MailOptin\Core\PluginSettings\Connections;
-use MailOptin\Core\PluginSettings\Settings;
 
 class AbstractCtctConnect extends AbstractConnect
 {
-    /** @var \MailOptin\Core\PluginSettings\Settings */
-    protected $plugin_settings;
-
-    /** @var \MailOptin\Core\PluginSettings\Connections */
-    protected $connections_settings;
-
-    /** @var \MailOptin\Core\PluginSettings\Connections */
+    /** @var Connections */
     protected $api_key = '89kxrwcayg4ntpb2vm3ywzfp';
 
     public function __construct()
     {
-        $this->plugin_settings      = Settings::instance();
-        $this->connections_settings = Connections::instance();
-
         parent::__construct();
     }
 
@@ -48,7 +38,7 @@ class AbstractCtctConnect extends AbstractConnect
      */
     public function ctctInstance()
     {
-        $access_token = $this->connections_settings->ctct_access_token();
+        $access_token = Connections::instance()->ctct_access_token();
 
         if (empty($access_token)) {
             throw new \Exception(__('ConstantContact access token not found.', 'mailoptin'));

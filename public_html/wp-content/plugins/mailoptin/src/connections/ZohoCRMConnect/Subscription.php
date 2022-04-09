@@ -69,6 +69,8 @@ class Subscription extends AbstractZohoCRMConnect
                 $owner = $this->get_integration_data('ZohoCRMConnect_lead_owner');
             }
 
+            $owner = apply_filters('mo_connections_zoho_crm_owner', $owner, $this);
+
             if ( ! empty($owner)) {
                 $payload[0]['Owner'] = array(
                     'id' => $owner
@@ -80,17 +82,20 @@ class Subscription extends AbstractZohoCRMConnect
                 $lead_source = $this->get_integration_data('ZohoCRMConnect_lead_lead_source');
             }
 
+            $lead_source = apply_filters('mo_connections_zoho_crm_lead_source', $lead_source, $this);
+
             if ( ! empty($lead_source)) {
                 $payload[0]['Lead_Source'] = $lead_source;
             }
 
-            $description = $this->get_integration_data('ZohoCRMConnect_description');
+            $description = apply_filters('mo_connections_zoho_crm_description', $this->get_integration_data('ZohoCRMConnect_description'), $this);
 
             if ( ! empty($description)) {
                 $payload[0]['Description'] = $description;
             }
 
-            $triggers = $this->get_integration_data('ZohoCRMConnect_triggers');
+            $triggers = apply_filters('mo_connections_zoho_crm_triggers', $this->get_integration_data('ZohoCRMConnect_triggers'), $this);
+
             if (empty($triggers)) $triggers = [];
 
             $response = $this->zcrmInstance()->apiRequest(

@@ -159,7 +159,12 @@ class MailOptin extends \WPForms_Provider
 
     public function connected_integrations()
     {
-        return ConnectionsRepository::get_connections();
+        $connections = ConnectionsRepository::get_connections();
+
+        //escape webhook connection
+        unset($connections['WebHookConnect']);
+
+        return  $connections;
     }
 
     /**
@@ -373,7 +378,7 @@ class MailOptin extends \WPForms_Provider
                 'panel'      => $this->slug,
                 'parent'     => 'providers',
                 'subsection' => $connection_id,
-                'reference'  => esc_html__('Marketing provider connection', 'wpforms-lite'),
+                'reference'  => esc_html__('Marketing provider connection', 'mailoptin'),
             ),
             false
         );

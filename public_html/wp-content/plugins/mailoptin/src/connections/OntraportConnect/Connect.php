@@ -63,7 +63,7 @@ class Connect extends AbstractOntraportConnect implements ConnectionInterface
      */
     public function get_tags()
     {
-        if ( ! self::is_connected()) return;
+        if ( ! self::is_connected()) return [];
 
         try {
 
@@ -94,12 +94,13 @@ class Connect extends AbstractOntraportConnect implements ConnectionInterface
                             $tag_array[$id] = $tag['tag_name'];
                         }
 
-
                         if (count($response['data']) < 50) {
                             $loop = false;
                         }
 
                         $offset += 50;
+                    } else {
+                        $loop = false;
                     }
                 }
 

@@ -3,7 +3,6 @@
  */
 import { registerStore } from '@wordpress/data';
 import { controls as dataControls } from '@wordpress/data-controls';
-import type { SelectFromMap } from '@automattic/data-stores';
 
 /**
  * Internal dependencies
@@ -13,14 +12,15 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 import * as resolvers from './resolvers';
 import reducer, { State } from './reducers';
-import { controls } from '../shared-controls';
-import { DispatchFromMap } from '../../mapped-types';
+import { controls as sharedControls } from '../shared-controls';
+import { controls } from './controls';
+import type { SelectFromMap, DispatchFromMap } from '../mapped-types';
 
 registerStore< State >( STORE_KEY, {
 	reducer,
 	actions,
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	controls: { ...dataControls, ...controls } as any,
+	controls: { ...dataControls, ...sharedControls, ...controls } as any,
 	selectors,
 	resolvers,
 } );

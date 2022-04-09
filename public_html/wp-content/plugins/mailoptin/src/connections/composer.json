@@ -50,6 +50,8 @@
       "MailOptin\\WPMLConnect\\": "WPMLConnect/",
       "MailOptin\\FormidableFormConnect\\": "FormidableFormConnect/",
       "MailOptin\\ForminatorFormConnect\\": "ForminatorFormConnect/",
+      "MailOptin\\WebHookConnect\\": "WebHookConnect/",
+      "MailOptin\\WooCommerceConnect\\": "WooCommerceConnect/",
       "MailOptin\\FacebookCustomAudienceConnect\\": "FacebookCustomAudienceConnect/",
       "MailOptin\\Connections\\": "./"
     },
@@ -59,12 +61,17 @@
   },
   "require": {
     "composer/installers": "~1.0",
-    "thinkshout/mailchimp-api-php": "^1.0",
+    "mailoptin/mailchimp-api-php": "^2.0",
     "deliciousbrains/wp-background-processing": "^1.0",
-    "drewm/drip": "^0.7.0"
+    "drewm/drip": "^0.9"
   },
   "_comment": "doing this to remove guzzle dependency declared by thinkshout/mailchimp-api-php because we are explicitly using the curl adpater",
   "replace": {
     "guzzlehttp/guzzle": "*"
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true
+    }
   }
 }

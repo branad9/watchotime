@@ -67,6 +67,7 @@ class Note extends \WC_Data {
 			'layout'        => 'plain',
 			'image'         => '',
 			'is_deleted'    => false,
+			'is_read'       => false,
 		);
 
 		parent::__construct( $data );
@@ -84,7 +85,7 @@ class Note extends \WC_Data {
 			$this->set_object_read( true );
 		}
 
-		$this->data_store = \WC_Data_Store::load( 'admin-note' );
+		$this->data_store = Notes::load_data_store();
 		if ( $this->get_id() > 0 ) {
 			$this->data_store->read( $this );
 		}
@@ -295,6 +296,25 @@ class Note extends \WC_Data {
 	}
 
 	/**
+	 * Get action by action name on the note.
+	 *
+	 * @param  string $action_name The action name.
+	 * @param  string $context What the value is for. Valid values are 'view' and 'edit'.
+	 * @return array the action.
+	 */
+	public function get_action( $action_name, $context = 'view' ) {
+		$actions = $this->get_prop( 'actions', $context );
+
+		$matching_action = null;
+		foreach ( $actions as $i => $action ) {
+			if ( $action->name === $action_name ) {
+				$matching_action =& $actions[ $i ];
+			}
+		}
+		return $matching_action;
+	}
+
+	/**
 	 * Get note layout (the old notes won't have one).
 	 *
 	 * @param  string $context What the value is for. Valid values are 'view' and 'edit'.
@@ -322,6 +342,16 @@ class Note extends \WC_Data {
 	 */
 	public function get_is_deleted( $context = 'view' ) {
 		return $this->get_prop( 'is_deleted', $context );
+	}
+
+	/**
+	 * Get is_read status.
+	 *
+	 * @param  string $context What the value is for. Valid values are 'view' and 'edit'.
+	 * @return array
+	 */
+	public function get_is_read( $context = 'view' ) {
+		return $this->get_prop( 'is_read', $context );
 	}
 
 	/*
@@ -503,6 +533,9 @@ class Note extends \WC_Data {
 			$this->error( 'admin_note_invalid_data', __( 'The admin note date prop cannot be empty.', 'woocommerce' ) );
 		}
 
+		if ( is_string( $date ) ) {
+			$date = wc_string_to_timestamp( $date );
+		}
 		$this->set_date_prop( 'date_created', $date );
 	}
 
@@ -512,6 +545,9 @@ class Note extends \WC_Data {
 	 * @param string|integer|null $date UTC timestamp, or ISO 8601 DateTime. If the DateTime string has no timezone or offset, WordPress site timezone will be assumed. Null if there is no date.
 	 */
 	public function set_date_reminder( $date ) {
+		if ( is_string( $date ) ) {
+			$date = wc_string_to_timestamp( $date );
+		}
 		$this->set_date_prop( 'date_reminder', $date );
 	}
 
@@ -568,6 +604,15 @@ class Note extends \WC_Data {
 	}
 
 	/**
+	 * Set note is_read status. NULL is not allowed
+	 *
+	 * @param bool $is_read Note is_read status.
+	 */
+	public function set_is_read( $is_read ) {
+		$this->set_prop( 'is_read', $is_read );
+	}
+
+	/**
 	 * Add an action to the note
 	 *
 	 * @param string  $name           Action name (not presented to user).
@@ -607,6 +652,8 @@ class Note extends \WC_Data {
 			'status'        => $status,
 			'primary'       => $primary,
 			'actioned_text' => $actioned_text,
+			'nonce_name'    => null,
+			'nonce_action'  => null,
 		);
 
 		$note_actions   = $this->get_prop( 'actions', 'edit' );
@@ -621,5 +668,36 @@ class Note extends \WC_Data {
 	 */
 	public function set_actions( $actions ) {
 		$this->set_prop( 'actions', $actions );
+	}
+
+	/**
+	 * Add a nonce to an existing note action.
+	 *
+	 * @link https://codex.wordpress.org/WordPress_Nonces
+	 *
+	 * @param string $note_action_name Name of action to add a nonce to.
+	 * @param string $nonce_action The nonce action.
+	 * @param string $nonce_name The nonce Name. This is used as the paramater name in the resulting URL for the action.
+	 * @return void
+	 * @throws \Exception If note name cannot be found.
+	 */
+	public function add_nonce_to_action( string $note_action_name, string $nonce_action, string $nonce_name ) {
+		$actions = $this->get_prop( 'actions', 'edit' );
+
+		$matching_action = null;
+		foreach ( $actions as $i => $action ) {
+			if ( $action->name === $note_action_name ) {
+				$matching_action =& $actions[ $i ];
+			}
+		}
+
+		if ( empty( $matching_action ) ) {
+			throw new \Exception( sprintf( 'Could not find action %s in note %s', $note_action_name, $this->get_name() ) );
+		}
+
+		$matching_action->nonce_action = $nonce_action;
+		$matching_action->nonce_name   = $nonce_name;
+
+		$this->set_actions( $actions );
 	}
 }

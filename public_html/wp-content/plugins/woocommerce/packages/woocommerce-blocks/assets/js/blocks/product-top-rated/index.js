@@ -10,7 +10,6 @@ import { without } from 'lodash';
  * Internal dependencies
  */
 import Block from './block';
-import { deprecatedConvertToShortcode } from '../../utils/deprecations';
 import sharedAttributes, {
 	sharedAttributeBlockTypes,
 } from '../../utils/shared-attributes';
@@ -20,8 +19,12 @@ const blockTypeName = 'woocommerce/product-top-rated';
 registerBlockType( blockTypeName, {
 	title: __( 'Top Rated Products', 'woocommerce' ),
 	icon: {
-		src: <Icon srcElement={ thumbUp } />,
-		foreground: '#96588a',
+		src: (
+			<Icon
+				srcElement={ thumbUp }
+				className="wc-block-editor-components-block-icon"
+			/>
+		),
 	},
 	category: 'woocommerce',
 	keywords: [ __( 'WooCommerce', 'woocommerce' ) ],
@@ -52,14 +55,6 @@ registerBlockType( blockTypeName, {
 			},
 		],
 	},
-
-	deprecated: [
-		{
-			// Deprecate shortcode save method in favor of dynamic rendering.
-			attributes: sharedAttributes,
-			save: deprecatedConvertToShortcode( blockTypeName ),
-		},
-	],
 
 	/**
 	 * Renders and manages the block.

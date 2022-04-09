@@ -163,11 +163,13 @@ class Connect extends AbstractMailChimpConnect implements ConnectionInterface
     public function replace_placeholder_tags($content, $type = 'html')
     {
         $search = [
+            '%7C',
             '{{webversion}}',
             '{{unsubscribe}}'
         ];
 
         $replace = [
+            '|',
             '*|ARCHIVE|*',
             '*|UNSUB|*'
         ];
@@ -548,7 +550,7 @@ class Connect extends AbstractMailChimpConnect implements ConnectionInterface
 
                 $output = json_encode($output);
 
-                set_transient("mo_mailchimp_get_group_interests_$list_id", $output, MINUTE_IN_SECONDS);
+                set_transient("mo_mailchimp_get_group_interests_$list_id", $output, 10 * MINUTE_IN_SECONDS);
             }
 
             return json_decode($output, true);
@@ -572,7 +574,7 @@ class Connect extends AbstractMailChimpConnect implements ConnectionInterface
 
                 $output = ['' => __('Select...', 'mailoptin')];
 
-                $response = $this->mc_list_instance()->getSegments($list_id, ['count' => 100, 'fields' => 'segments.id,segments.name']);
+                $response = $this->mc_list_instance()->getSegments($list_id, ['count' => 1000, 'fields' => 'segments.id,segments.name']);
 
                 if (isset($response->segments) && is_array($response->segments)) {
                     foreach ($response->segments as $segment) {
@@ -582,7 +584,7 @@ class Connect extends AbstractMailChimpConnect implements ConnectionInterface
 
                 $output = json_encode($output);
 
-                set_transient("mo_mailchimp_get_list_segment_$list_id", $output, MINUTE_IN_SECONDS);
+                set_transient("mo_mailchimp_get_list_segment_$list_id", $output, 10 * MINUTE_IN_SECONDS);
             }
 
             return json_decode($output, true);

@@ -81,7 +81,7 @@ class Subscription extends AbstractConnect
                 }
             }
 
-            $subscriber_data = array_filter($subscriber_data, [$this, 'data_filter']);
+            $subscriber_data = apply_filters('mo_connections_mailster_optin_payload', array_filter($subscriber_data, [$this, 'data_filter']), $this);
 
             $subscriber_id = mailster('subscribers')->add($subscriber_data, true);
 

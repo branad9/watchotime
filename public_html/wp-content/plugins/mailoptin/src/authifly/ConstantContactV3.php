@@ -5,8 +5,9 @@ namespace Authifly\Provider;
 use Authifly\Adapter\OAuth2;
 use Authifly\Data\Collection;
 use Authifly\Data;
+use Authifly\Exception\InvalidAccessTokenException;
 use Authifly\Exception\InvalidArgumentException;
-use MailOptin\Core\Connections\AbstractConnect;
+use Authifly\HttpClient\Util;
 
 /**
  * ConstantContactV3 OAuth2 provider adapter.
@@ -21,12 +22,12 @@ class ConstantContactV3 extends OAuth2
     /**
      * {@inheritdoc}
      */
-    protected $authorizeUrl = 'https://api.cc.email/v3/idfed';
+    protected $authorizeUrl = 'https://authz.constantcontact.com/oauth2/default/v1/authorize';
 
     /**
      * {@inheritdoc}
      */
-    protected $accessTokenUrl = 'https://idfed.constantcontact.com/as/token.oauth2';
+    protected $accessTokenUrl = 'https://authz.constantcontact.com/oauth2/default/v1/token';
 
     /**
      * {@inheritdoc}
@@ -36,9 +37,7 @@ class ConstantContactV3 extends OAuth2
     /**
      * {@inheritdoc}
      */
-    protected $scope = 'contact_data campaign_data';
-
-    protected $supportRequestState = false;
+    protected $scope = 'contact_data campaign_data offline_access';
 
     /**
      * {@inheritdoc}
@@ -46,6 +45,16 @@ class ConstantContactV3 extends OAuth2
     protected function initialize()
     {
         parent::initialize();
+
+        $this->tokenExchangeHeaders = [
+            'Content-Type' => 'application/x-www-form-urlencoded',
+            'Authorization' => sprintf('Basic %s', base64_encode($this->clientId . ':' . $this->clientSecret))
+        ];
+
+        $this->tokenExchangeParameters = [
+            'grant_type'   => 'authorization_code',
+            'redirect_uri' => $this->callback
+        ];
 
         $refresh_token = $this->getStoredData('refresh_token');
 
@@ -68,6 +77,39 @@ class ConstantContactV3 extends OAuth2
                 'Authorization' => 'Bearer ' . $access_token
             ];
         }
+    }
+
+
+
+    /**
+     * Finalize the authorization process
+     *
+     * Necessary because we are removing state validation cos OAuthCredentialStorage is stateless and CC requires state
+     * to be sent during authorization.
+     *
+     * @throws InvalidAccessTokenException
+     * @throws \Authifly\Exception\HttpClientFailureException
+     * @throws \Authifly\Exception\HttpRequestFailedException
+     */
+    protected function authenticateFinish()
+    {
+        $this->logger->debug(sprintf('%s::authenticateFinish(), callback url:', get_class($this)), [Util::getCurrentUrl(true)]);
+
+        $code = filter_input(INPUT_GET, 'code');
+
+        /**
+         * Authorization Request Code
+         *
+         * RFC6749: If the resource owner grants the access request, the authorization
+         * server issues an authorization code and delivers it to the client:
+         *
+         * http://tools.ietf.org/html/rfc6749#section-4.1.2
+         */
+        $response = $this->exchangeCodeForAccessToken($code);
+
+        $this->validateAccessTokenExchange($response);
+
+        $this->initialize();
     }
 
     /**
@@ -95,63 +137,11 @@ class ConstantContactV3 extends OAuth2
             $headers     // Request Headers
         );
 
-        // The token is expired after 7200 seconds it's used.
-        if ((time() > ($this->getStoredData('date_created') + 7190)) || (401 == $this->httpClient->getResponseHttpCode())) {
-
-            $new_access_token = $this->mailoptin_external_token_refresh();
-
-            $headers['Authorization'] = sprintf('Bearer %s', $new_access_token);
-
-            $response = $this->httpClient->request(
-                $url,
-                $method,     // HTTP Request Method. Defaults to GET.
-                $parameters, // Request Parameters
-                $headers     // Request Headers
-            );
-        }
-
         $this->validateApiResponse('Signed API request has returned an error');
 
         $response = (new Data\Parser())->parse($response);
 
         return $response;
-    }
-
-    /**
-     * @throws \Exception
-     */
-    public function mailoptin_external_token_refresh()
-    {
-        $refresh_token = $this->tokenRefreshParameters['refresh_token'];
-
-        $response = AbstractConnect::static_oauth_token_refresh('constantcontactv3', $refresh_token);
-
-        if (isset($response['success']) && $response['success'] === true) {
-
-            $time_now = time();
-
-            if (isset($response['data']['access_token'])) {
-                $this->storeData('access_token', $response['data']['access_token']);
-            }
-
-            if (isset($response['data']['refresh_token'])) {
-                $this->storeData('refresh_token', $response['data']['refresh_token']);
-            }
-
-            $this->storeData('refresh_token', $time_now);
-
-            $option_name = MAILOPTIN_CONNECTIONS_DB_OPTION_NAME;
-            $old_data    = get_option($option_name, []);
-            $new_data    = [
-                'ctctv3_access_token'  => $response['data']['access_token'],
-                'ctctv3_refresh_token' => $response['data']['refresh_token'],
-                'ctctv3_date_created'  => $time_now
-            ];
-
-            update_option($option_name, array_merge($old_data, $new_data));
-
-            return $response['data']['access_token'];
-        }
     }
 
     /**
@@ -204,6 +194,32 @@ class ConstantContactV3 extends OAuth2
         $headers = array_replace(['Content-Type' => 'application/json'], $headers);
 
         return $this->apiRequest('contacts/sign_up_form', 'POST', $payloads, $headers);
+    }
+
+    public function updateContact($contact_id, $payloads, $headers = [])
+    {
+        $headers = array_replace(['Content-Type' => 'application/json'], $headers);
+
+        return $this->apiRequest('contacts/' . $contact_id, 'PUT', $payloads, $headers);
+    }
+
+    public function getContact($contact_id)
+    {
+        return $this->apiRequest('contacts/' . $contact_id);
+    }
+
+    /**
+     * @return array|mixed
+     * @throws \Exception
+     */
+    public function getTags()
+    {
+        $response = $this->apiRequest('contact_tags?include_count=false&limit=500');
+
+        $data = new Collection($response);
+        $tags = $data->filter('tags')->toArray();
+
+        return $tags;
     }
 
     /**

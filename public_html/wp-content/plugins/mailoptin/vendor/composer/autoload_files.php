@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'a4a119a56e50fbb293281d9a48007e0e' => $vendorDir . '/symfony/polyfill-php80/bootstrap.php',
     '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => $vendorDir . '/symfony/polyfill-mbstring/bootstrap.php',
     '9e4824c5afbdc1482b6025ce3d4dfde8' => $vendorDir . '/league/csv/src/functions_include.php',
     '784368192bb2be2d6178826e1a6f0ee9' => $baseDir . '/src/authifly/OAuthCredentialStorage.php',
@@ -23,4 +24,5 @@ return array(
     '1d70241e5fa15180bf0b547b18160633' => $baseDir . '/src/core/src/Functions/custom-settings-api.php',
     '541054f7d83801e360f0f9cfeb6e7da9' => $baseDir . '/src/core/src/Functions/functions.php',
     '1064428a5c96d5b26937d911d5bd0e95' => $baseDir . '/src/core/src/Functions/php-html-css-js-minifier.php',
+    'e180ca08fee0de2c7165b35361a1b492' => $baseDir . '/src/core/src/Functions/MoBFnote.php',
 );

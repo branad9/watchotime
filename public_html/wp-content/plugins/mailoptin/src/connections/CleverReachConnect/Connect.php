@@ -198,7 +198,7 @@ class Connect extends AbstractCleverReachConnect implements ConnectionInterface
                         $forms_array[$key] = $form;
                     }
 
-                    set_transient('mo_cleverreach_forms', $forms_array, HOUR_IN_SECONDS);
+                    set_transient('mo_cleverreach_forms', $forms_array, 10 * MINUTE_IN_SECONDS);
                 }
             }
 

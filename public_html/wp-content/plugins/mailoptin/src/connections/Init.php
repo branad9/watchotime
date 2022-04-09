@@ -6,7 +6,7 @@ class Init
 {
     public static function select2_tag_connections()
     {
-        return ['GetResponseConnect', 'OntraportConnect', 'ConvertKitConnect', 'InfusionsoftConnect', 'FluentCRMConnect'];
+        return ['GetResponseConnect', 'OntraportConnect', 'ConvertKitConnect', 'InfusionsoftConnect', 'FluentCRMConnect', 'Ctctv3Connect'];
     }
 
     public static function text_tag_connections()
@@ -79,6 +79,7 @@ class Init
         \MailOptin\MailerliteConnect\Connect::get_instance();
         \MailOptin\EmailOctopusConnect\Connect::get_instance();
         \MailOptin\FluentCRMConnect\Connect::get_instance();
+        \MailOptin\WebHookConnect\Connect::get_instance();
         \MailOptin\GEMConnect\Connect::get_instance();
         \MailOptin\SendinblueConnect\Connect::get_instance();
         \MailOptin\SendGridConnect\Connect::get_instance();
@@ -99,6 +100,7 @@ class Init
         \MailOptin\FacebookCustomAudienceConnect\Connect::get_instance();
         \MailOptin\FormidableFormConnect\Connect::get_instance();
         \MailOptin\ForminatorFormConnect\Connect::get_instance();
+        \MailOptin\WooCommerceConnect\Connect::get_instance();
         GoogleAnalytics::get_instance();
     }
 }

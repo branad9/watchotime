@@ -467,6 +467,7 @@ tr.mo-test-mode {
     text-align: center;
 }
 
+.mailoptin-data-listing th.manage-column.column-name,
 .mailoptin-data-listing td.name.column-name {
     text-align: left;
 }
@@ -552,11 +553,11 @@ a.mo-split-test-upgrade {
 
 /* optin wp listing column re-arrangement*/
 table.optin_forms th#actions {
-    width: 20% !important;
+    width: 18% !important;
 }
 
 table.optin_forms th#name {
-    width: 24%;
+    width: 22%;
 }
 
 table.optin_forms th#uuid {
@@ -695,8 +696,12 @@ form.mo-inline {
     background: #fff;
 }
 
-.metabox-holder.mailoptin-tab-settings textarea {
-    width: 25em;
+.metabox-holder.mailoptin-tab-settings textarea,
+.metabox-holder.mailoptin-tab-settings input:not([type=submit]):not([type=checkbox]):not([type=radio]),
+.metabox-holder.mailoptin-tab-settings select,
+.metabox-holder.mailoptin-tab-settings .select2-container {
+    max-width: 30em;
+    width: 100% !important;
 }
 
 .mailoptin-settings-wrap .mailoptin-tab-settings .postbox {
@@ -1045,55 +1050,6 @@ form.mo-inline {
     z-index: 9;
 }
 
-.admin-color-fresh #adminmenu .wp-submenu a:after {
-    background: #666;
-}
-
-.admin-color-light #adminmenu .wp-submenu a:after {
-    background: #ddd;
-}
-
-.admin-color-blue #adminmenu .wp-submenu a:after {
-    background: #85c7e0;
-}
-
-.admin-color-coffee #adminmenu .wp-submenu a:after {
-    background: #7f7068;
-}
-
-.admin-color-ectoplasm #adminmenu .wp-submenu a:after {
-    background: #755a9d;
-}
-
-.admin-color-midnight #adminmenu .wp-submenu a:after {
-    background: #555865;
-}
-
-.admin-color-ocean #adminmenu .wp-submenu a:after {
-    background: #739dac;
-}
-
-.admin-color-sunrise #adminmenu .wp-submenu a:after {
-    background: #e14c46;
-}
-
-#adminmenu .wp-submenu a[href$="page=mailoptin-integrations"],
-#adminmenu .wp-submenu a[href$="page=mailoptin-emails"] {
-    position: relative;
-    margin-bottom: 10px
-}
-
-#adminmenu .wp-submenu a[href$="page=mailoptin-integrations"]:after,
-#adminmenu .wp-submenu a[href$="page=mailoptin-emails"]:after {
-    position: absolute;
-    content: "";
-    display: block;
-    width: 30px;
-    height: 1px;
-    bottom: -5px;
-}
-
-
 /* add new email */
 .mo-design-gateway {
     width: 100%;
@@ -1432,4 +1388,47 @@ form.mo-inline {
     right: 0.5em;
     content: "✓";
     color: #54b948;
+}
+
+.mailoptin-admin tr#hubspot_clear_cache_row td {
+    border: 1px solid #c3c4c7;
+}
+
+.mailoptin-admin .mo-connection-clear-cache-wrap {
+    padding: 10px 20px;
+    text-align:center;
+}
+
+.mailoptin-admin #hubspot_clear_cache_row .description {
+    padding: 10px 20px;
+}
+
+.mailoptin-admin .metabox-holder h2.mo-line-header {
+    width: 100%;
+    text-align: left;
+    border-bottom: 1px solid #c3c4c7;
+    line-height: 0.1em !important;
+    margin: 10px 0 20px !important;
+    font-weight: bold !important;
+}
+
+.mailoptin-admin .metabox-holder .mo-line-header span {
+    background: #fff;
+    padding-right: 10px;
+    font-size: 14px;
+}
+
+.mo-woo-upsell-block {
+    background-color: #d9edf7;
+    border: 1px solid #bce8f1;
+    box-sizing: border-box;
+    color: #31708f;
+    outline: 0;
+    margin: 10px;
+    padding: 10px;
+}
+
+.mo-woo-upsell-block p {
+    margin: 0 0 5px 0;
+    font-size: 14px;
 }

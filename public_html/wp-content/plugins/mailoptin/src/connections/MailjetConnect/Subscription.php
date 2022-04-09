@@ -190,7 +190,7 @@ class Subscription extends AbstractMailjetConnect
 
             $lead_data['Properties'] = array_filter($lead_data['Properties'], [$this, 'data_filter']);
 
-            $lead_data = array_filter($lead_data, [$this, 'data_filter']);
+            $lead_data = apply_filters('mo_connections_mailjet_optin_payload', array_filter($lead_data, [$this, 'data_filter']), $this);
 
             if ($this->is_double_optin() && ! $this->is_user_exist()) {
 

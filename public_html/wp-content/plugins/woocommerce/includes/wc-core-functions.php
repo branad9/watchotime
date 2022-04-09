@@ -390,7 +390,7 @@ function wc_locate_template( $template_name, $template_path = '', $default_path 
 	// Look within passed path within the theme - this is priority.
 	if ( false !== strpos( $template_name, 'product_cat' ) || false !== strpos( $template_name, 'product_tag' ) ) {
 		$cs_template = str_replace( '_', '-', $template_name );
-		$template = locate_template(
+		$template    = locate_template(
 			array(
 				trailingslashit( $template_path ) . $cs_template,
 				$cs_template,
@@ -730,7 +730,7 @@ function get_woocommerce_currency_symbols() {
 			'ILS' => '&#8362;',
 			'IMP' => '&pound;',
 			'INR' => '&#8377;',
-			'IQD' => '&#x639;.&#x62f;',
+			'IQD' => '&#x62f;.&#x639;',
 			'IRR' => '&#xfdfc;',
 			'IRT' => '&#x062A;&#x0648;&#x0645;&#x0627;&#x0646;',
 			'ISK' => 'kr.',
@@ -976,14 +976,14 @@ function wc_get_image_size( $image_size ) {
 				$size['height'] = '';
 				$size['crop']   = 0;
 			} elseif ( 'custom' === $cropping ) {
-				$width          = max( 1, get_option( 'woocommerce_thumbnail_cropping_custom_width', '4' ) );
-				$height         = max( 1, get_option( 'woocommerce_thumbnail_cropping_custom_height', '3' ) );
+				$width          = max( 1, (float) get_option( 'woocommerce_thumbnail_cropping_custom_width', '4' ) );
+				$height         = max( 1, (float) get_option( 'woocommerce_thumbnail_cropping_custom_height', '3' ) );
 				$size['height'] = absint( NumberUtil::round( ( $size['width'] / $width ) * $height ) );
 				$size['crop']   = 1;
 			} else {
 				$cropping_split = explode( ':', $cropping );
-				$width          = max( 1, current( $cropping_split ) );
-				$height         = max( 1, end( $cropping_split ) );
+				$width          = max( 1, (float) current( $cropping_split ) );
+				$height         = max( 1, (float) end( $cropping_split ) );
 				$size['height'] = absint( NumberUtil::round( ( $size['width'] / $width ) * $height ) );
 				$size['crop']   = 1;
 			}
@@ -1048,6 +1048,10 @@ function wc_print_js() {
  * @param  bool    $httponly Whether the cookie is only accessible over HTTP, not scripting languages like JavaScript. @since 3.6.0.
  */
 function wc_setcookie( $name, $value, $expire = 0, $secure = false, $httponly = false ) {
+	if ( ! apply_filters( 'woocommerce_set_cookie_enabled', true, $name ,$value, $expire, $secure ) ) {
+		return;
+	}
+
 	if ( ! headers_sent() ) {
 		setcookie( $name, $value, $expire, COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN, $secure, apply_filters( 'woocommerce_cookie_httponly', $httponly, $name, $value, $expire, $secure ) );
 	} elseif ( Constants::is_true( 'WP_DEBUG' ) ) {
@@ -1270,7 +1274,7 @@ function wc_format_country_state_string( $country_string ) {
  * @return array
  */
 function wc_get_base_location() {
-	$default = apply_filters( 'woocommerce_get_base_location', get_option( 'woocommerce_default_country' ) );
+	$default = apply_filters( 'woocommerce_get_base_location', get_option( 'woocommerce_default_country', 'US:CA' ) );
 
 	return wc_format_country_state_string( $default );
 }
@@ -1286,7 +1290,7 @@ function wc_get_base_location() {
  */
 function wc_get_customer_default_location() {
 	$set_default_location_to = get_option( 'woocommerce_default_customer_address', 'base' );
-	$default_location        = '' === $set_default_location_to ? '' : get_option( 'woocommerce_default_country', '' );
+	$default_location        = '' === $set_default_location_to ? '' : get_option( 'woocommerce_default_country', 'US:CA' );
 	$location                = wc_format_country_state_string( apply_filters( 'woocommerce_customer_default_location', $default_location ) );
 
 	// Geolocation takes priority if used and if geolocation is possible.
@@ -1851,7 +1855,7 @@ function wc_get_tax_rounding_mode() {
 	$constant = WC_TAX_ROUNDING_MODE;
 
 	if ( 'auto' === $constant ) {
-		return 'yes' === get_option( 'woocommerce_prices_include_tax', 'no' ) ? 2 : 1;
+		return 'yes' === get_option( 'woocommerce_prices_include_tax', 'no' ) ? PHP_ROUND_HALF_DOWN : PHP_ROUND_HALF_UP;
 	}
 
 	return intval( $constant );
@@ -2269,9 +2273,9 @@ function wc_prevent_dangerous_auto_updates( $should_update, $plugin ) {
 		include_once dirname( __FILE__ ) . '/admin/plugin-updates/class-wc-plugin-updates.php';
 	}
 
-	$new_version      = wc_clean( $plugin->new_version );
-	$plugin_updates   = new WC_Plugin_Updates();
-	$version_type = Constants::get_constant( 'WC_SSR_PLUGIN_UPDATE_RELEASE_VERSION_TYPE' );
+	$new_version    = wc_clean( $plugin->new_version );
+	$plugin_updates = new WC_Plugin_Updates();
+	$version_type   = Constants::get_constant( 'WC_SSR_PLUGIN_UPDATE_RELEASE_VERSION_TYPE' );
 	if ( ! is_string( $version_type ) ) {
 		$version_type = 'none';
 	}
@@ -2362,6 +2366,7 @@ function wc_is_active_theme( $theme ) {
 function wc_is_wp_default_theme_active() {
 	return wc_is_active_theme(
 		array(
+			'twentytwentytwo',
 			'twentytwentyone',
 			'twentytwenty',
 			'twentynineteen',
@@ -2443,7 +2448,7 @@ function wc_round_discount( $value, $precision ) {
 		return NumberUtil::round( $value, $precision, WC_DISCOUNT_ROUNDING_MODE ); // phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.round_modeFound
 	}
 
-	if ( 2 === WC_DISCOUNT_ROUNDING_MODE ) {
+	if ( PHP_ROUND_HALF_DOWN === WC_DISCOUNT_ROUNDING_MODE ) {
 		return wc_legacy_round_half_down( $value, $precision );
 	}
 

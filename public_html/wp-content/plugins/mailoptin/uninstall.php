@@ -20,6 +20,7 @@ function mailoptin_mo_uninstall_function()
         OptinCampaignsRepository::burst_all_cache();
 
         wp_clear_scheduled_hook('mo_daily_recurring_job');
+        wp_clear_scheduled_hook('mo_twice_daily_recurring_job');
         wp_clear_scheduled_hook('mo_hourly_recurring_job');
 
         /** Delete plugin options */
@@ -64,6 +65,7 @@ function mailoptin_mo_uninstall_function()
         $drop_tables[] = "DROP TABLE IF EXISTS {$db_prefix}" . Core::optin_campaigns_table_name;
         $drop_tables[] = "DROP TABLE IF EXISTS {$db_prefix}" . Core::conversions_table_name;
         $drop_tables[] = "DROP TABLE IF EXISTS {$db_prefix}" . Core::email_campaigns_table_name;
+        $drop_tables[] = "DROP TABLE IF EXISTS {$db_prefix}" . 'mo_optin_advance_stat';
 
         $drop_tables = apply_filters('mo_drop_database_tables', $drop_tables, $db_prefix);
 

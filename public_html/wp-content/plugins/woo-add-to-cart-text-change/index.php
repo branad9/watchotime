@@ -1,17 +1,17 @@
 <?php
 
 /**
- * Plugin Name: WooCommerce add to cart Text change
+ * Plugin Name: Add to Cart Text Changer
  * Description: WooCommerce Product's [ Add to cart ] Button text change and easily set custom text by your own language. WooCommerce is one of the best Ecommerce plugin. Sometime can be need to change Add_to_cart Button text changing. Developed by <a href='https://codersaiful.net'>Saiful Islam</a>
  * Plugin URI: https://wordpress.org/plugins/woo-add-to-cart-text-change/
  * Author: Saiful Islam
- * Version: 1.6
+ * Version: 1.8
  * Author URI: https://profiles.wordpress.org/codersaiful
  * 
  * Requires at least:    4.0.0
- * Tested up to:         5.3.2
+ * Tested up to:         5.8
  * WC requires at least: 3.0.0
- * WC tested up to: 	 3.9.1
+ * WC tested up to: 	 5.5.2
  * 
  * Text Domain: wactc
  * Domain Path: /languages/
@@ -26,18 +26,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 $wactc_default_args = array(
     'icon'      =>  'no_icon',//probale value: no_icon, only_icon, icon_left, icon_right
-    'simple'    =>  'Add to cart',
-    'variable'    =>  'Select options',
-    'grouped'    =>  'View products',
-    'external'    =>  '',
+    'simple'    =>  __( 'Add to cart', 'wactc' ),
+    'variable'  =>  __( 'Select options', 'wactc' ),
+    'grouped'   =>  __( 'View products', 'wactc' ),
+    'external'  =>  '',
 );
 
 include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-define('WACTC_PLUGIN_BASE_FOLDER', plugin_basename(dirname(__FILE__)));
-define('WACTC_PLUGIN_BASE_FILE', plugin_basename(__FILE__));
-define("WACTC_BASE_URL", WP_PLUGIN_URL . '/' . plugin_basename(dirname(__FILE__)) . '/');
-define("wactc_dir_base", dirname(__FILE__) . '/');
-define("WACTC_BASE_DIR", str_replace('\\', '/', wactc_dir_base));
+
+define( 'WACTC_NAME', __( 'Add to Cart Text Changer', 'wactc' ) );
+define( 'WACTC_PLUGIN_BASE_FOLDER', plugin_basename( dirname(__FILE__) ) );
+define( 'WACTC_PLUGIN_BASE_FILE', plugin_basename(__FILE__) );
+
+define( "WACTC_BASE_URL", plugins_url() . '/' . plugin_basename( dirname(__FILE__) ) . '/' );
+define( "wactc_dir_base", dirname( __FILE__ ) . '/' );
+define( "WACTC_BASE_DIR", str_replace( '\\', '/', wactc_dir_base ) );
 
 //Define Options Path
 define( 'WACTC_TABLE_OPTIONS_PATH', WACTC_BASE_DIR . 'modules/options' . DIRECTORY_SEPARATOR );
@@ -52,10 +55,13 @@ function wactc_plugin_loaded(){
             add_action( 'admin_notices', 'wactc_admin_notice_missing_wc' );
             return;
     }
-    //Including Framework and Option for Framework
-    include_once WACTC_TABLE_OPTIONS_PATH . 'loader.php';
+
     if( is_admin() ){
         include( WACTC_BASE_DIR . 'admin/plugin_setting_link.php' ); //To show Setting link at plugin page
+        
+        include( WACTC_BASE_DIR . 'admin/menu.php' ); //Adding menu to Dashboard.
+        include( WACTC_BASE_DIR . 'admin/button_text_form.php' ); //Add to Cart Button text Customizing form.
+  
     }
     
     $wactc_values = get_option( 'wactc_default_add_to_cart_text' );
@@ -78,9 +84,9 @@ function wactc_admin_notice_missing_wc() {
        if ( isset( $_GET['activate'] ) ) unset( $_GET['activate'] );
 
        $message = sprintf(
-               /* translators: 1: Plugin name 2: Elementor */
+               
                esc_html__( '"%1$s" requires "%2$s" to be installed and activated.', 'wactc' ),
-               '<strong>' . esc_html__( 'WooCommerce Add to cart Text Change - Plugin', 'wactc' ) . '</strong>',
+               '<strong>' . WACTC_NAME . '</strong>',
                '<strong><a href="' . esc_url( 'https://wordpress.org/plugins/woocommerce/' ) . '" target="_blank">' . esc_html__( 'WooCommerce', 'wactc' ) . '</a></strong>'
        );
 
@@ -96,12 +102,9 @@ function wactc_admin_notice_missing_wc() {
  */
 function wactc_install(){
     global $wactc_default_args;
+    
     $current = get_option( 'wactc_default_add_to_cart_text' );
-    /*
-    if(!$current || !is_array( $current )){
-        update_option( $wactc_default_args );
-    }else
-     */
+
     if( $current && !is_array( $current ) && is_string( $current ) ){
         $wactc_default_args['simple'] = $current;
     }else{

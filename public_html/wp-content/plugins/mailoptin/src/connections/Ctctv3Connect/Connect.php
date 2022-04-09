@@ -2,7 +2,12 @@
 
 namespace MailOptin\Ctctv3Connect;
 
+use Authifly\Provider\ConstantContactV3;
+use Authifly\Storage\OAuthCredentialStorage;
 use MailOptin\Core\Connections\ConnectionInterface;
+use MailOptin\Core\PluginSettings\Connections;
+use function MailOptin\Core\current_user_has_privilege;
+use function MailOptin\Core\moVar;
 
 class Connect extends AbstractCtctv3Connect implements ConnectionInterface
 {
@@ -16,6 +21,15 @@ class Connect extends AbstractCtctv3Connect implements ConnectionInterface
         ConnectSettingsPage::get_instance();
 
         add_filter('mailoptin_registered_connections', array($this, 'register_connection'));
+
+        add_filter('mo_optin_form_integrations_default', array($this, 'integration_customizer_settings'));
+        add_action('mo_optin_integrations_controls_after', array($this, 'integration_customizer_controls'), 10, 4);
+
+        add_action('mailoptin_admin_notices', function () {
+            add_action('admin_notices', array($this, 'admin_notice'));
+        });
+
+        add_action('admin_init', [$this, 'authorize_integration']);
 
         parent::__construct();
     }
@@ -41,6 +55,61 @@ class Connect extends AbstractCtctv3Connect implements ConnectionInterface
         $connections[self::$connectionName] = __('Constant Contact (v3)', 'mailoptin');
 
         return $connections;
+    }
+
+    public function authorize_integration()
+    {
+        if ( ! current_user_has_privilege()) return;
+
+        if ( ! isset($_GET['moauth'])) return;
+
+        if ($_GET['moauth'] != 'ctctv3') return;
+
+        $connections_settings = Connections::instance(true);
+        $ctctv3_api_key       = $connections_settings->ctctv3_api_key();
+        $ctctv3_api_secret    = $connections_settings->ctctv3_api_secret();
+
+        $config = [
+            'callback' => self::callback_url(),
+            'keys'     => ['id' => $ctctv3_api_key, 'secret' => $ctctv3_api_secret]
+        ];
+
+
+        $instance = new ConstantContactV3($config, null, new OAuthCredentialStorage());
+
+        try {
+
+            $instance->authenticate();
+
+            $access_token = $instance->getAccessToken();
+
+            $old_data = get_option(MAILOPTIN_CONNECTIONS_DB_OPTION_NAME, []);
+            unset($old_data['ctctv3_date_created']);
+
+            $new_data = [
+                'ctctv3_access_token'  => moVar($access_token, 'access_token'),
+                'ctctv3_refresh_token' => moVar($access_token, 'refresh_token'),
+                'ctctv3_expires_at'    => time() + (int)moVar($access_token, 'expires_in')
+            ];
+
+            $new_data = array_filter($new_data, [$this, 'data_filter']);
+
+            update_option(MAILOPTIN_CONNECTIONS_DB_OPTION_NAME, array_merge($old_data, $new_data));
+
+            $connection = self::$connectionName;
+
+            // delete connection cache
+            delete_transient("_mo_connection_cache_$connection");
+
+        } catch (\Exception $e) {
+
+            self::save_optin_error_log($e->getMessage(), 'constantcontactv3');
+        }
+
+        $instance->disconnect();
+
+        wp_redirect(MAILOPTIN_CONNECTIONS_SETTINGS_PAGE);
+        exit;
     }
 
     /**
@@ -73,10 +142,22 @@ class Connect extends AbstractCtctv3Connect implements ConnectionInterface
     public function get_email_list()
     {
         try {
-            return $this->ctctv3Instance()->getContactList();
+
+            $lists = get_transient('ctctv3_get_email_list');
+
+            if (empty($lists) || false === $lists) {
+
+                $lists = $this->ctctv3Instance()->getContactList();
+
+                set_transient('ctctv3_get_email_list', $lists, HOUR_IN_SECONDS);
+            }
+
+            return $lists;
 
         } catch (\Exception $e) {
             self::save_optin_error_log($e->getMessage(), 'constantcontactv3');
+
+            return [];
         }
     }
 
@@ -114,7 +195,14 @@ class Connect extends AbstractCtctv3Connect implements ConnectionInterface
 
         try {
 
-            $fields = $this->ctctv3Instance()->getContactsCustomFields();
+            $fields = get_transient('ctctv3_get_optin_fields_' . $list_id);
+
+            if (empty($fields) || false === $fields) {
+
+                $fields = $this->ctctv3Instance()->getContactsCustomFields();
+
+                set_transient('ctctv3_get_optin_fields_' . $list_id, $fields, 10 * MINUTE_IN_SECONDS);
+            }
 
             if (is_array($fields) && ! empty($fields)) {
 
@@ -123,11 +211,82 @@ class Connect extends AbstractCtctv3Connect implements ConnectionInterface
                     $custom_fields['cufd_' . $field->custom_field_id] = $field->label;
                 }
             }
+
         } catch (\Exception $e) {
             self::save_optin_error_log($e->getMessage(), 'constantcontactv3');
         }
 
         return $custom_fields;
+    }
+
+    /**
+     * @param $controls
+     *
+     * @return array
+     */
+    public function integration_customizer_controls($controls)
+    {
+        if (defined('MAILOPTIN_DETACH_LIBSODIUM') === true) {
+            $controls[] = [
+                'field'       => 'chosen_select',
+                'name'        => 'Ctctv3Connect_contact_tags',
+                'choices'     => $this->get_tags(),
+                'label'       => __('Subscriber Tags', 'mailoptin'),
+                'description' => __('Select Constant Contact (v3) tags that will be assigned to contacts.', 'mailoptin')
+            ];
+
+            return $controls;
+        }
+    }
+
+    /**
+     * @param array $settings
+     *
+     * @return mixed
+     */
+    public function integration_customizer_settings($settings)
+    {
+        $settings['Ctctv3Connect_contact_tags'] = apply_filters('mailoptin_customizer_optin_campaign_Ctctv3Connect_contact_tags', []);
+
+        return $settings;
+    }
+
+    /**
+     * Fetches tags.
+     *
+     * @return mixed
+     */
+    public function get_tags()
+    {
+        if ( ! self::is_connected()) return [];
+
+        $default = [];
+
+        try {
+
+            $cache_key = 'ctctv3_tags';
+
+            $tag_array = get_transient($cache_key);
+
+            if (empty($tag_array) || false === $tag_array) {
+                $tags = $this->ctctv3Instance()->getTags();
+
+                $tag_array = [];
+
+                foreach ($tags as $tag) {
+                    $tag_array[$tag->tag_id] = $tag->name;
+                }
+
+                set_transient($cache_key, $tag_array, 10 * MINUTE_IN_SECONDS);
+            }
+
+            return $tag_array;
+
+        } catch (\Exception $e) {
+            self::save_optin_error_log($e->getMessage(), 'constantcontactv3');
+
+            return $default;
+        }
     }
 
     /**
@@ -159,8 +318,34 @@ class Connect extends AbstractCtctv3Connect implements ConnectionInterface
         return (new Subscription($email, $name, $list_id, $extras))->subscribe();
     }
 
+    public function admin_notice()
+    {
+        $connections_settings = Connections::instance(true);
+        $access_token         = $connections_settings->ctctv3_access_token();
+        $api_key              = $connections_settings->ctctv3_api_key();
+        $api_secret           = $connections_settings->ctctv3_api_secret();
+
+        if ( ! empty($access_token) && empty($api_key) && empty($api_secret)) {
+
+            $message = sprintf(
+            /* translators: 1: open <a> tag, 2: close </a> tag */
+                esc_html__(
+                    'On March 31, 2022, Constant Contact is ending support for their previous authorization management service. %1$sPlease re-authorize your Constant Contact (v3) integration%2$s urgently to get your MailOptin form working again.',
+                    'mailoptin'
+                ),
+                '<a href="' . MAILOPTIN_CONNECTIONS_SETTINGS_PAGE . '#ctctv3_auth">',
+                '</a>'
+            )
+            ?>
+
+            <div class="notice notice-error">
+                <p><?php echo wp_kses($message, array('a' => array('href' => true))); ?></p>
+            </div>
+            <?php
+        }
+    }
+
     /**
-     * Singleton poop.
      *
      * @return Connect|null
      */

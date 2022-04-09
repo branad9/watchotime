@@ -11,7 +11,6 @@ import { Icon, folder } from '@woocommerce/icons';
  */
 import './editor.scss';
 import Block from './block';
-import { deprecatedConvertToShortcode } from '../../utils/deprecations';
 import sharedAttributes, {
 	sharedAttributeBlockTypes,
 } from '../../utils/shared-attributes';
@@ -22,8 +21,12 @@ import sharedAttributes, {
 registerBlockType( 'woocommerce/product-category', {
 	title: __( 'Products by Category', 'woocommerce' ),
 	icon: {
-		src: <Icon srcElement={ folder } />,
-		foreground: '#96588a',
+		src: (
+			<Icon
+				srcElement={ folder }
+				className="wc-block-editor-components-block-icon"
+			/>
+		),
 	},
 	category: 'woocommerce',
 	keywords: [ __( 'WooCommerce', 'woocommerce' ) ],
@@ -76,26 +79,6 @@ registerBlockType( 'woocommerce/product-category', {
 			},
 		],
 	},
-
-	deprecated: [
-		{
-			// Deprecate shortcode save method in favor of dynamic rendering.
-			attributes: {
-				...sharedAttributes,
-				editMode: {
-					type: 'boolean',
-					default: true,
-				},
-				orderby: {
-					type: 'string',
-					default: 'date',
-				},
-			},
-			save: deprecatedConvertToShortcode(
-				'woocommerce/product-category'
-			),
-		},
-	],
 
 	/**
 	 * Renders and manages the block.

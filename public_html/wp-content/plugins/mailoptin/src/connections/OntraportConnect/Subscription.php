@@ -64,7 +64,7 @@ class Subscription extends AbstractOntraportConnect
                 }
             }
 
-            $data = array_filter($data, [$this, 'data_filter']);
+            $data = apply_filters('mo_connections_ontraport_optin_payload', array_filter($data, [$this, 'data_filter']), $this);
 
             $response = $this->ontraportInstance()->add_subscriber($data);
 

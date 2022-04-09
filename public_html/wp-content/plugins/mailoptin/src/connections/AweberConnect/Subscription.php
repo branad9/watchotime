@@ -83,7 +83,7 @@ class Subscription extends AbstractAweberConnect
                 }
             }
 
-            $payload = array_filter($payload, [$this, 'data_filter']);
+            $payload = apply_filters('mo_connections_aweber_optin_payload', array_filter($payload, [$this, 'data_filter']), $this);
 
             // save an instance of the Aweber Auth. Necessary to prevent re-instantiation and so we can
             // capture request status code below.

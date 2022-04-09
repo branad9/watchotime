@@ -30,7 +30,8 @@ class Button_Placement extends Base {
 		global $product;
 		/* @var \WC_Product $product */
 		if ( null !== $product && method_exists( $product, 'get_id' ) ) {
-			echo '<input type="hidden" id="wc_quick_buy_hook_' . $product->get_id() . '" value="' . $product->get_id() . '"  />';
+			$pid = esc_attr( $product->get_id() );
+			echo "<input type=\"hidden\" id=\"wc_quick_buy_hook_$pid\" value=\"$pid\"/>";
 		}
 	}
 
@@ -91,7 +92,7 @@ class Button_Placement extends Base {
 					'type'    => 'link',
 				);
 				$instance = new Button_Generator( $args );
-				echo $instance->html();
+				echo wp_kses_post( $instance->html() );
 			}
 		}
 	}
@@ -104,7 +105,7 @@ class Button_Placement extends Base {
 		if ( apply_filters( 'wc_quick_buy_allow_render_button', true, $product, true ) ) {
 			$args     = array( 'product' => $product );
 			$instance = new Button_Generator( $args );
-			echo $instance->html();
+			echo wp_kses_post( $instance->html() );
 		}
 	}
 }

@@ -33,7 +33,7 @@ if( class_exists( 'SKELET' ) ) {
     'show_search'      => true,
     'show_bar_menu'  => false,
     'ajax_save'  => false,
-	'footer_text'=> '<span style="color:gainsboro;">Please <a target="_blank" href="https://wordpress.org/support/plugin/disable-xml-rpc-api/reviews/#new-post">rate us</a> in wordprees repository</span>',
+	'footer_text'=> '<span style="color:gainsboro;">Please <a target="_blank" href="https://wordpress.org/support/plugin/disable-xml-rpc-api/reviews/#new-post">rate us</a> in wordprees repository</span><script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="a0979335-6589-492d-8623-bc4622d40ba0";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>',
 
 	
 	
@@ -234,7 +234,14 @@ Back in 2013, attackers sent Pingback requests through xmlrpc.php of approximate
 	  'id'      => 'json-rest-api',
 	  'type'    => 'switcher',
 	  'title'   => 'Disable JSON REST API',
-	  'desc'    => 'disable the JSON REST API for logged out users',
+	  'desc'    => 'disable the JSON REST API for not logged in users',
+	  'default' => false,
+	),
+	array(
+	  'id'      => 'htaccess protection',
+	  'type'    => 'switcher',
+	  'title'   => 'Disable writing in htaccess file',
+	  'desc'    => 'Protect your website by changing htaccess file permission to read-only (0444)',
 	  'default' => false,
 	),
 	array(
@@ -242,7 +249,7 @@ Back in 2013, attackers sent Pingback requests through xmlrpc.php of approximate
 	  'type'    => 'switcher',
 	  'title'   => 'Hide WordPress Version',
 	  'desc'    => 'Remove WordPress version for security reasons',
-	  'default' => true,
+	  'default' => false,
 	),
 	array(
 	  'id'      => 'disable-code-editor',

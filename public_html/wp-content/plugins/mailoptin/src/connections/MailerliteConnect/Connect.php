@@ -75,22 +75,44 @@ class Connect extends AbstractMailerliteConnect implements ConnectionInterface
     public function get_email_list()
     {
         try {
-            $allGroups = $this->mailerlite_instance()->groups()->get()->toArray(); // returns array of groups
 
-            // an array with list id as key and name as value.
-            $lists_array = array();
+            $offset = 0;
+            $loop   = true;
+            $limit  = 100;
 
-            if ( ! empty($allGroups)) {
-                foreach ($allGroups as $list) {
-                    $lists_array[$list->id] = $list->name;
+            $lists_array = [];
+
+            while ($loop === true) {
+
+                $allGroups = $this->mailerlite_instance()->groups()
+                                  ->limit($limit)
+                                  ->offset($offset)
+                                  ->get()
+                                  ->toArray();
+
+                if ( ! empty($allGroups)) {
+
+                    foreach ($allGroups as $list) {
+                        $lists_array[$list->id] = $list->name;
+                    }
+
+                    if (count($allGroups) < $limit) {
+                        $loop = false;
+                    }
+
+                    $offset += $limit;
+
+                } else {
+                    $loop = false;
                 }
             }
 
             return $lists_array;
 
-
         } catch (\Exception $e) {
             self::save_optin_error_log($e->getMessage(), 'mailerlite');
+
+            return [];
         }
     }
 

@@ -82,6 +82,8 @@ class Subscription extends AbstractEmmaConnect
 
             $lead_data['fields'] = array_filter($lead_data['fields'], [$this, 'data_filter']);
 
+            $lead_data = apply_filters('mo_connections_emma_optin_payload', array_filter($lead_data, [$this, 'data_filter']), $this);
+
             $response = $this->emma_instance()->make_request('members/signup', $lead_data, 'post');
 
             if (self::is_http_code_success($response['status_code'])) return parent::ajax_success();

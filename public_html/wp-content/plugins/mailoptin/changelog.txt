@@ -1,5 +1,73 @@
 ﻿== Changelog ==
 
+= 1.2.45.2 =
+* Improved the reliability of the new Constant Contact authentication.
+
+= 1.2.45.1 =
+* Move to a new authentication system for Constant Contact v3 integration. [Learn more](https://mailoptin.io/article/connect-mailoptin-with-constant-contact/#v3)
+
+= 1.2.45.0 =
+* Added support for new Constant Contact v3 integration endpoints - REAUTHORIZE URGENTLY.
+* Added new sidebar and inpost optin themes.
+
+= 1.2.44.0 =
+* Pro feature [Sync WooCommerce customers to ESP support after a purchase](https://mailoptin.io/?p=32886&ref=changelog).
+* Added filter to disable gutenberg block.
+
+= 1.2.43.0 =
+* Fixed bug where not all AWeber list were retrieved.
+* Fixed bug with background image change not reflecting in customizer.
+* Added filter to post collection function.
+* Added alt when optin image is present.
+
+= 1.2.42.2 =
+* Improved CCv3 oauth connection.
+* Switched hubspot to more v3 endpoints
+
+= 1.2.42.0 =
+* Pro feature [optin sound effect](https://mailoptin.io/?p=32472).
+* Added 'mo-optin-success-state' class to optin form when a user subscribes.
+* Increased HubSpot cache expiration time.
+* Fixed range slider customizer control.
+
+= 1.2.41.0 =
+* CleaverReach referrer parameter fix.
+* Improved caching efficiency of integrations data.
+* Reduced Cleverreach access token expiration by 2 weeks to avoid refresh error.
+* Remove empty paragraph tags and visual composer tags in email campaigns.
+* Show feature image alt of posts on email campaigns.
+
+= 1.2.40.1 =
+* Added ACF field support for custom email templates.
+* Added caching to expensive ESP API calls.
+* Fixed Forminator fatal error.
+* Fixed view in browser not working for SendGrid email marketing.
+
+= 1.2.40.0 =
+* New: [WooCommerce Added to cart](https://mailoptin.io/woocommerce-targeting/?ref=changelog) trigger.
+* New: [WooCommerce Conditions](https://mailoptin.io/woocommerce-targeting/?ref=changelog) display rule.
+* Enhancement: Only send email after user registration if password isn't set.
+* Fixed bug where all MailerLite groups weren't returned.
+* Updated JS libraries.
+* Added filters to disable email notification to user and admin after registration.
+* Added filter to disable VideoToImage.
+
+= 1.2.39.2 =
+* Fixed broken images in email body.
+* Improved handling of mailjet API errors.
+* Fixed wp listing UI issue.
+* Fixed bug where some Sendinblue list was missing.
+* Nuked every optin campaign ID that is 0 data retrieval.
+
+= 1.2.39.1 =
+* Fixed bug where mailoptin broke many ajax requests.
+* Cleanup WPbakery shortcodes and empty paragraphs.
+* Added is error checking to token refreshing.
+
+= 1.2.39.0 =
+* Premium: [Added Webhook integration](https://mailoptin.io/?p=31452).
+* Fixed PHP 8.0 issue with http_build_query.
+
 = 1.2.38.2 =
 * Fixed fatal error in PHP 8
 

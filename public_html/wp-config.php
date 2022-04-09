@@ -1,4 +1,10 @@
 <?php
+define( 'WP_CACHE', true );
+
+
+
+
+
 
 //Begin Really Simple SSL session cookie settings
 @ini_set('session.cookie_httponly', true);
@@ -26,16 +32,16 @@
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', 'u901714393_mZKLx' );
+define( 'DB_NAME', "u901714393_mZKLx" );
 
 /** MySQL database username */
-define( 'DB_USER', 'u901714393_6AdV4' );
+define( 'DB_USER', "u901714393_6AdV4" );
 
 /** MySQL database password */
-define( 'DB_PASSWORD', '12345@Arvind#' );
+define( 'DB_PASSWORD', "12345@Arvind#" );
 
 /** MySQL hostname */
-define( 'DB_HOST', 'localhost' );
+define( 'DB_HOST', "localhost" );
 
 /** Database Charset to use in creating database tables. */
 define( 'DB_CHARSET', 'utf8' );
@@ -84,7 +90,7 @@ $table_prefix = 'wp_3y8hc4zhkr_';
  * @link https://wordpress.org/support/article/debugging-in-wordpress/
  */
 define( 'WP_DEBUG', false );
-//define( 'WP_CACHE', true );
+//
 require_once( dirname( __FILE__ ) . '/gd-config.php' );
 define( 'FS_METHOD', 'direct' );
 define( 'FS_CHMOD_DIR', (0705 & ~ umask()) );

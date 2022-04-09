@@ -34,7 +34,7 @@ class Hubspot extends OAuth2
     /**
      * {@inheritdoc}
      */
-    protected $scope = 'contacts';
+    protected $scope = 'oauth crm.lists.read crm.objects.contacts.read crm.objects.contacts.write crm.schemas.contacts.read crm.lists.write crm.schemas.contacts.write crm.objects.owners.read';
 
     protected $supportRequestState = false;
 
@@ -109,20 +109,32 @@ class Hubspot extends OAuth2
      *
      *
      * @return array
+     * @throws \Authifly\Exception\HttpClientFailureException
+     * @throws \Authifly\Exception\HttpRequestFailedException
+     * @throws \Authifly\Exception\InvalidAccessTokenException
      */
     public function getListCustomFields()
     {
-        $fields = $this->apiRequest("properties/v1/contacts/properties");
+        $fields = $this->apiRequest("crm/v3/properties/contacts");
 
-        if (empty($fields)) {
-            return array();
+        if (empty($fields->results)) {
+            return [];
         }
 
-        $filtered = array();
-        foreach ($fields as $field) {
+        $filtered = [];
+        foreach ($fields->results as $field) {
 
             //Ensure the field is not automatically set by Hubspot
-            if ($field->readOnlyDefinition) {
+            if ($field->modificationMetadata->readOnlyDefinition) {
+                continue;
+            }
+
+            if ($field->fieldType == 'calculation_equation') {
+                continue;
+            }
+
+            // legacy properties
+            if (in_array($field->name, ['owneremail', 'ownername'])) {
                 continue;
             }
 
@@ -136,10 +148,14 @@ class Hubspot extends OAuth2
      * Add subscriber to an email list.
      *
      * @param string $list_id
-     * @param array $payload
+     * @param $email
+     * @param array $contact_data
      *
      * @return object
      * @throws InvalidArgumentException
+     * @throws \Authifly\Exception\HttpClientFailureException
+     * @throws \Authifly\Exception\HttpRequestFailedException
+     * @throws \Authifly\Exception\InvalidAccessTokenException
      */
     public function addSubscriber($list_id, $email, $contact_data = [])
     {
@@ -167,7 +183,9 @@ class Hubspot extends OAuth2
      * @param string $email
      *
      * @return object
-     * @throws InvalidArgumentException
+     * @throws \Authifly\Exception\HttpClientFailureException
+     * @throws \Authifly\Exception\HttpRequestFailedException
+     * @throws \Authifly\Exception\InvalidAccessTokenException
      */
     private function addSubscriberToList($list_id, $email)
     {

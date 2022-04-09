@@ -181,29 +181,49 @@ class Connect extends AbstractSendinblueConnect implements ConnectionInterface
     {
         try {
 
-            // note any value > 50 results in {"code":"out_of_range","message":"Limit exceeds max value"}
-            $response = $this->sendinblue_instance()->make_request('contacts/lists', ['limit' => 50]);
+            $cache_key = 'mo_sendinblue_list';
 
-            // an array with list id as key and name as value.
-            $lists_array = array();
+            $list_array = [];
 
-            if ( ! isset($response['body']->lists)) {
-                self::save_optin_error_log(json_encode($response['body']), 'sendinblue');
+            if (empty($list_array) || false === $list_array) {
 
-                return $lists_array;
-            }
+                $offset = 0;
+                $limit  = 50;
+                $loop   = true;
 
-            $response = $response['body']->lists;
-            if (is_array($response) && ! empty($response)) {
-                foreach ($response as $list) {
-                    $lists_array[$list->id] = $list->name;
+                $list_array = get_transient($cache_key);
+
+                while ($loop === true) {
+
+                    // note any value > 50 results in {"code":"out_of_range","message":"Limit exceeds max value"}
+                    $response = $this->sendinblue_instance()->make_request('contacts/lists', ['offset' => $offset, 'limit' => $limit]);
+
+                    if (isset($response['body']->lists) && is_array($response['body']->lists)) {
+
+                        foreach ($response['body']->lists as $list) {
+                            $list_array[$list->id] = $list->name;
+                        }
+
+                        if (count($response['body']->lists) < $limit) {
+                            $loop = false;
+                        }
+
+                        $offset += $limit;
+                    } else {
+                        $loop = false;
+                        self::save_optin_error_log(json_encode($response['body']), 'sendinblue');
+                    }
                 }
+
+                set_transient($cache_key, $list_array, 10 * MINUTE_IN_SECONDS);
             }
 
-            return $lists_array;
+            return $list_array;
 
         } catch (\Exception $e) {
             self::save_optin_error_log($e->getMessage(), 'sendinblue');
+
+            return [];
         }
     }
 

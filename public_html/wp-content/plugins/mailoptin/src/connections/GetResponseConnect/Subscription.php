@@ -88,7 +88,7 @@ class Subscription extends AbstractGetResponseConnect
             }
 
             // it's important to remove empty param as GR will throw an error if say name field is empty.
-            $lead_data = array_filter($lead_data, [$this, 'data_filter']);
+            $lead_data = apply_filters('mo_connections_getresponse_optin_payload', array_filter($lead_data, [$this, 'data_filter']), $this);
 
             $response = (array)$this->getresponse_instance()->addContact($lead_data);
 

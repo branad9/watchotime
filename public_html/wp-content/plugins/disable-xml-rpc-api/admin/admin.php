@@ -14,30 +14,116 @@ function dsxmlrpc_action_links($links) {
 }
 
 function dsxmlrpc_admin_notice_wpsg() {
-	if (   ! PAnD::is_admin_notice_active( 'dsxmlrpc-wpsg-notice-forever' )  ) {
+	if (   ! PAnD::is_admin_notice_active( 'wpsg-notice-forever' )  ) {
 		return;
 	}
 	
 	?>
-	<div data-dismissible="dsxmlrpc-wpsg-notice-forever" id="dsxmlrpc-wpsg-notice" class="notice notice-warning is-dismissible">
-	<img src="<?=DSXMLRPC_URL?>/admin/logo-icon.png" style="float:left; margin:10px 20px 10px 10px" width="100">
-	<h2>You can improve your website security by using WP Security Guard!</h2>
+	<div data-dismissible="wpsg-notice-forever" id="dsxmlrpc-wpsg-notice" class="notice notice-warning is-dismissible">
+	<label class="gftp-plugin-name">WP Security Guard</label>
+	<h1>Did you know?</h1>
 	<div class="dsxmlrpc-wpsg-notice-innner">
-		<p>Brand new <strong>lightweight</strong> security plugin is ready now you can buy it with special discount offer. Use <strong style="color:green;">"xmlrpc20"</strong> promo code to get 20% off in your purchase. </p>
-		<a class="button button-primary dsxmlrpc_button" target="_blank"  href="https://neatma.com/wpsg-plugin/" >More Info</a>
+		<p>You can improve your website security by using <strong>  WP Security Guard!</strong> </p>
 	</div>
+	<span class="dashicons dashicons-external" style="color: #2196f3;vertical-align:bottom;"></span><a href="https://neatma.com/wpsg-plugin/" target="_blank">Learn more</a>
+	<span class="dashicons dashicons-calendar" style="margin-left: 15px;color: #009688;vertical-align:-webkit-baseline-middle;"></span><a  style="color:#009688;" class="remind-wpsg" href="#">Remind Me Later</a>
+	<span class="dashicons dashicons-dismiss" style="margin-left: 15px;color: #ff5722;vertical-align:-webkit-baseline-middle;"></span><a  style="color:#ff5722;" class="dismiss-wpsg" href="#">Not Intrested!</a>
+
 	</div>
+		<script type="text/javascript">
+		(function ($) {
+			//shorthand for ready event.
+			$(
+				function () {
+					$( 'div[data-dismissible] a.dismiss-wpsg' ).click(
+						function (event) {
+							event.preventDefault();
+							var $this = $( this );
+
+							var attr_value, option_name, dismissible_length, data;
+
+							attr_value = $this.parent().attr( 'data-dismissible' ).split( '-' );
+							console.log(attr_value);
+							// remove the dismissible length from the attribute value and rejoin the array.
+							dismissible_length = attr_value.pop();
+
+							option_name = attr_value.join( '-' );
+
+							data = {
+								'action': 'dismiss_admin_notice',
+								'option_name': option_name,
+								'dismissible_length': dismissible_length,
+								'nonce': dismissible_notice.nonce
+							};
+
+							// We can also pass the url value separately from ajaxurl for front end AJAX implementations
+							$.post( ajaxurl, data );
+							$this.parent().addClass('hide');
+						}
+					);
+				}
+				
+
+				
+			)
+			$(
+				function () {
+					$( 'div[data-dismissible] a.remind-wpsg' ).click(
+						function (event) {
+							event.preventDefault();
+							var $this = $( this );
+
+							var attr_value, option_name, data;
+
+							attr_value = $this.parent().attr( 'data-dismissible' ).split( '-' );
+							// remove the dismissible length from the attribute value and rejoin the array.
+							
+
+							option_name = attr_value.join( '-' );
+
+							data = {
+								'action': 'dismiss_admin_notice',
+								'option_name': option_name,
+								'dismissible_length': 10,
+								'nonce': dismissible_notice.nonce
+							};
+
+							// We can also pass the url value separately from ajaxurl for front end AJAX implementations
+							$.post( ajaxurl, data );
+							$this.parent().addClass('hide');
+						}
+					);
+				}
+			)
+
+		}(jQuery));
+		</script>
 	<style>
-	div#dsxmlrpc-wpsg-notice {
-    background-image: url('<?=DSXMLRPC_URL?>/admin/xmlrpc20.png');
-    background-repeat: no-repeat;
-    background-position: 95%;
-    background-size: contain;
-	height: 140px;
+	#dsxmlrpc-wpsg-notice.hide,#dsxmlrpc-wpsg-notice .notice-dismiss {
+	display:none;
 	}
-	.dsxmlrpc_button {
-    margin: 3px 0 15px 15px !important;
-    transition: 500ms;
+	#dsxmlrpc-wpsg-notice a{
+	color: #2196f3;
+    vertical-align: sub;
+	}
+	#dsxmlrpc-wpsg-notice label.gftp-plugin-name {
+    background: #4caf50;
+    color: #fff;
+    padding: 2px 10px;
+    position: absolute;
+    top: auto;
+    bottom: 100%;
+    right: 15px;
+    -moz-border-radius: 0 0 3px 3px;
+    -webkit-border-radius: 0 0 3px 3px;
+    border-radius: 4px 4px 0px 0px;
+    left: auto;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: auto;
+	}
+	div#dsxmlrpc-wpsg-notice {
+    padding: 10px 15px;
 	}
 	</style>
 	<?php
@@ -49,9 +135,6 @@ function dsxmlrpc_admin_notice_review() {
 		return;
 	}
 	
-	if (isset($_POST['dsxmlrpc-notice-forever'])){
-		update_option('dsxmlrpc-notice-forever','forever',false);
-	}
 	if (   ! PAnD::is_admin_notice_active( 'dsxmlrpc-notice-15' ) ||  get_option('dsxmlrpc-notice-forever')  ) {
 		return;
 	}

@@ -6,16 +6,19 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Contracts\\Translation\\' => array($vendorDir . '/symfony/translation-contracts'),
     'Symfony\\Component\\Translation\\' => array($vendorDir . '/symfony/translation'),
     'Symfony\\Component\\CssSelector\\' => array($vendorDir . '/symfony/css-selector'),
     'Pelago\\' => array($vendorDir . '/pelago/emogrifier/src'),
-    'Mailchimp\\http\\' => array($vendorDir . '/thinkshout/mailchimp-api-php/src/http'),
-    'Mailchimp\\' => array($vendorDir . '/thinkshout/mailchimp-api-php/src'),
+    'Mailchimp\\http\\' => array($vendorDir . '/mailoptin/mailchimp-api-php/src/http'),
+    'Mailchimp\\' => array($vendorDir . '/mailoptin/mailchimp-api-php/src'),
     'MailOptin\\ZohoCampaignsConnect\\' => array($baseDir . '/src/connections/ZohoCampaignsConnect'),
     'MailOptin\\ZohoCRMConnect\\' => array($baseDir . '/src/connections/ZohoCRMConnect'),
     'MailOptin\\WordPressUserRegistrationConnect\\' => array($baseDir . '/src/connections/WordPressUserRegistrationConnect'),
+    'MailOptin\\WooCommerceConnect\\' => array($baseDir . '/src/connections/WooCommerceConnect'),
+    'MailOptin\\WebHookConnect\\' => array($baseDir . '/src/connections/WebHookConnect'),
     'MailOptin\\WeMailConnect\\' => array($baseDir . '/src/connections/WeMailConnect'),
     'MailOptin\\WPMLConnect\\' => array($baseDir . '/src/connections/WPMLConnect'),
     'MailOptin\\WPFormsConnect\\' => array($baseDir . '/src/connections/WPFormsConnect'),
@@ -66,6 +69,7 @@ return array(
     'Html2Text\\' => array($vendorDir . '/soundasleep/html2text/src'),
     'DrewM\\Drip\\' => array($vendorDir . '/drewm/drip/src'),
     'Composer\\Installers\\' => array($vendorDir . '/composer/installers/src/Composer/Installers'),
+    'Barryvdh\\Composer\\' => array($vendorDir . '/barryvdh/composer-cleanup-plugin/src'),
     'Authifly\\' => array($baseDir . '/src/authifly/src'),
     '' => array($vendorDir . '/nesbot/carbon/src'),
 );

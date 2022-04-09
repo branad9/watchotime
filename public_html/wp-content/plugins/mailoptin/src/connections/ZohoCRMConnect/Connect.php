@@ -138,7 +138,7 @@ class Connect extends AbstractZohoCRMConnect implements ConnectionInterface
                     }
                 }
 
-                set_transient($cache_key, $sources, 6 * HOUR_IN_SECONDS);
+                set_transient($cache_key, $sources, 30 * MINUTE_IN_SECONDS);
             }
 
             return $sources;

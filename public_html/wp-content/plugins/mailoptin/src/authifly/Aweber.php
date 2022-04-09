@@ -80,13 +80,15 @@ class Aweber extends OAuth1
      *
      * @return array
      */
-    public function fetchEmailList($account_id)
+    public function fetchEmailList($account_id, $offset = 0, $limit = 100)
     {
         if (empty($account_id)) {
             throw new InvalidArgumentException('Account ID is missing');
         }
-
-        $response = $this->apiRequest("accounts/$account_id/lists");
+        
+        $params = ['ws.start' => $offset, 'ws.size'   => $limit];
+        $response = $this->apiRequest("accounts/$account_id/lists", 'GET', $params);
+        
 
         $data = new Data\Collection($response);
 
@@ -128,7 +130,7 @@ class Aweber extends OAuth1
      *
      * @return array
      */
-    public function fetchEmailListNameAndId($account_id)
+    public function fetchEmailListNameAndId($account_id, $offset = 0, $limit = 100)
     {
         /**
          * array (size=2)
@@ -145,7 +147,7 @@ class Aweber extends OAuth1
             throw new InvalidArgumentException('Account ID is missing');
         }
 
-        $response = $this->fetchEmailList($account_id);
+        $response = $this->fetchEmailList($account_id, $offset, $limit);
 
         return array_reduce($response, function ($carry, $item) {
             $carry[] = [$item->id, $item->name];

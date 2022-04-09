@@ -47,7 +47,7 @@ class Connect extends AbstractConnect implements ConnectionInterface
     {
         $defaults['connection_email_list'] = 'subscriber';
 
-        $settings['WordPressUserRegistrationConnect_autologin'] = apply_filters('mailoptin_customizer_optin_campaign_WordPressUserRegistrationConnect_autologin', false);
+        $defaults['WordPressUserRegistrationConnect_autologin'] = apply_filters('mailoptin_customizer_optin_campaign_WordPressUserRegistrationConnect_autologin', false);
 
         return $defaults;
     }
@@ -160,9 +160,9 @@ class Connect extends AbstractConnect implements ConnectionInterface
     }
 
     /**
-     * @param string $email
      * @param string $name
-     * @param string $list_id ID of email list to add subscriber to
+     * @param string $email
+     * @param $role
      * @param mixed|null $extras
      *
      * @return mixed

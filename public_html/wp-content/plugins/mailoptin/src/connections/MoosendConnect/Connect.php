@@ -5,6 +5,15 @@ namespace MailOptin\MoosendConnect;
 use MailOptin\Core\Connections\ConnectionInterface;
 use MailOptin\Core\Logging\CampaignLogRepository;
 
+if (strpos(__FILE__, 'mailoptin' . DIRECTORY_SEPARATOR . 'src') !== false) {
+    // production url path to assets folder.
+    define('MAILOPTIN_MOOSEND_CONNECT_ASSETS_URL', MAILOPTIN_URL . 'src/connections/MoosendConnect/assets/');
+} else {
+    // dev url path to assets folder.
+    define('MAILOPTIN_MOOSEND_CONNECT_ASSETS_URL', MAILOPTIN_URL . '../' . dirname(substr(__FILE__, strpos(__FILE__, 'mailoptin'))) . '/assets/');
+}
+
+
 class Connect extends AbstractMoosendConnect implements ConnectionInterface
 {
     /**
@@ -18,7 +27,19 @@ class Connect extends AbstractMoosendConnect implements ConnectionInterface
 
         add_action('init', [$this, 'campaign_log_public_preview']);
 
-        add_filter('mailoptin_registered_connections', array($this, 'register_connection'));
+        add_filter('mailoptin_registered_connections', [$this, 'register_connection']);
+    
+        add_action('wp_ajax_mailoptin_customizer_fetch_moosend_segments', [$this, 'customizer_fetch_moosend_segment']);
+    
+        add_action('mailoptin_email_campaign_enqueue_customizer_js', function () {
+            wp_enqueue_script(
+                'moosend-group-control',
+                MAILOPTIN_MOOSEND_CONNECT_ASSETS_URL . 'emailcustomizer.js',
+                array('jquery', 'customize-controls'),
+                MAILOPTIN_VERSION_NUMBER
+            );
+        });
+        
         parent::__construct();
     }
 
@@ -63,6 +84,82 @@ class Connect extends AbstractMoosendConnect implements ConnectionInterface
         $connections[self::$connectionName] = __('Moosend', 'mailoptin');
 
         return $connections;
+    }
+    
+    public function get_list_segments($list_id)
+    {
+        if (is_null($list_id) || empty($list_id) || ! $list_id) return [];
+        
+        try {
+    
+            $output = get_transient("mo_moosend_get_segments_$list_id");
+    
+            if ($output === false) {
+                $output = ['' => __('Select...', 'mailoptin')];
+    
+                $segment_types = $this->get_segment_types($list_id);
+    
+                if(!empty($segment_types)) {
+                    foreach ($segment_types as $key => $segment) {
+                        $output[$key] = $segment;
+                    }
+                }
+    
+    
+                $output = json_encode($output);
+    
+                set_transient("mo_moosend_get_segments_$list_id", $output, 10 * MINUTE_IN_SECONDS);
+            }
+        
+            return json_decode($output, true);
+            
+        } catch (\Exception $e) {
+            self::save_optin_error_log($e->getMessage(), 'mailchimp');
+            
+            return [];
+        }
+    }
+    
+    /**
+     * Fetch Moosend segments of a list for Email Customizer.
+     */
+    public function customizer_fetch_moosend_segment() {
+        check_ajax_referer('customizer-fetch-email-list', 'security');
+    
+        \MailOptin\Core\current_user_has_privilege() || exit;
+    
+        $list_id = sanitize_text_field($_REQUEST['list_id']);
+        
+        $segments = $this->get_list_segments($list_id);
+    
+        if (count($segments) > 1) {
+            foreach ($segments as $key => $value) {
+                echo '<option value="' . esc_attr($key) . '">' . $value . '</option>';
+            }
+        }
+    
+        $structure = ob_get_clean();
+    
+        wp_send_json_success($structure);
+    
+        wp_die();
+    }
+    
+    /**
+     * @param $list_id
+     * @return array
+     */
+    public function get_segment_types($list_id) {
+        try {
+            //Fetch the segments
+            $response = $this->moosend_instance()->get_segments_groups($list_id);
+    
+            //Convert it to array of id=>name
+            return wp_list_pluck($response, 'Name', 'ID');
+        } catch (\Exception $e) {
+            self::save_optin_error_log($e->getMessage(), 'moosend');
+            return [];
+        }
     }
 
     /**

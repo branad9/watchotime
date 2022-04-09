@@ -40,10 +40,29 @@ class Subscription extends AbstractHubspotConnect
                 'lastname'  => $name_split[1],
             ];
 
+            $lead_status      = $this->get_integration_data('HubspotConnect_lead_status');
+            $life_cycle_stage = $this->get_integration_data('HubspotConnect_life_cycle_stage');
+            $owner            = $this->get_integration_data('HubspotConnect_lead_owner');
+
+            if ( ! empty($life_cycle_stage)) {
+                $properties['lifecyclestage'] = $life_cycle_stage;
+            }
+
+            if ( ! empty($lead_status)) {
+                $properties['hs_lead_status'] = $lead_status;
+            }
+
+            if ( ! empty($owner)) {
+                $properties['hubspot_owner_id'] = $owner;
+            }
+
             //GDPR consent
             if (isset($this->extras['mo-acceptance']) && $this->extras['mo-acceptance'] == 'yes') {
+
                 $gdpr_tag = apply_filters('mo_connections_hubspot_acceptance_tag', 'gdpr');
+
                 try {
+
                     $this->hubspotInstance()->apiRequest(
                         "properties/v1/contacts/properties",
                         'POST',
@@ -106,9 +125,11 @@ class Subscription extends AbstractHubspotConnect
                 }
             }
 
-            $response = $this->hubspotInstance()->addSubscriber($this->list_id, $this->email, array_filter($contact_data, [$this, 'data_filter']));
+            $payload = apply_filters('mo_connections_hubspot_optin_payload', array_filter($contact_data, [$this, 'data_filter']), $this);
 
-            if ($response) {
+            $response = $this->hubspotInstance()->addSubscriber($this->list_id, $this->email, $payload);
+
+            if (isset($response->vid)) {
                 return parent::ajax_success();
             }
 

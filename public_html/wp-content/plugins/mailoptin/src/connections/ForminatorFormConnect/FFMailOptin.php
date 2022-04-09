@@ -229,6 +229,9 @@ class FFMailOptin extends Forminator_Addon_Abstract
             $connections['leadbank'] = __('MailOptin Leads', 'mailoptin');
         }
 
+        //escape webhook connection
+        unset($connections['WebHookConnect']);
+
         return $connections;
     }
 
@@ -282,7 +285,15 @@ class FFMailOptin extends Forminator_Addon_Abstract
                 throw new \Exception(__('MailOptin addon not connected.', 'mailoptin'));
             }
 
-            $form_settings_instance = $this->get_addon_form_settings($form_id);
+            // backward compatibility
+            if (method_exists($this, 'get_addon_form_settings')) {
+                $form_settings_instance = $this->get_addon_form_settings($form_id);
+            }
+
+            if (method_exists($this, 'get_addon_settings')) {
+                $form_settings_instance = $this->get_addon_settings($form_id, 'form');
+            }
+
             if ( ! $form_settings_instance instanceof ConnectionFormSettingsPage) {
                 throw new \Exception(__('Form settings instance is not valid Forminator MailOptin Form Addon.', 'mailoptin'));
             }

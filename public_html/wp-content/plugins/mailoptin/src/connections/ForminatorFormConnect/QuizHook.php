@@ -70,7 +70,6 @@ class QuizHook extends Forminator_Addon_Quiz_Hooks_Abstract {
         $quiz_settings        = $this->quiz_settings_instance->get_quiz_settings();
         $addons_fields        = $this->quiz_settings_instance->get_form_fields();
 
-
         $form_entry_fields   = forminator_lead_form_data( $submitted_data );
         $submitted_data      = get_addons_lead_form_entry_data( $quiz_settings, $submitted_data, $addons_fields );
         $submitted_data      = array_merge( $submitted_data, $quiz_submitted_data );

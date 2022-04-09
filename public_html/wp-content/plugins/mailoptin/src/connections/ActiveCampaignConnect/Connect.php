@@ -253,7 +253,7 @@ class Connect extends AbstractActiveCampaignConnect implements ConnectionInterfa
                         }
                     }
 
-                    set_transient('mo_activecampaign_forms', $forms_array, HOUR_IN_SECONDS);
+                    set_transient('mo_activecampaign_forms', $forms_array, 10 * MINUTE_IN_SECONDS);
                 }
             }
 

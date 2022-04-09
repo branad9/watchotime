@@ -129,16 +129,34 @@ class Connect extends AbstractAweberConnect implements ConnectionInterface
      */
     public function get_email_list()
     {
+        
         try {
-            $response = $this->aweber_instance()->fetchEmailListNameAndId($this->account_id);
-
-            // an array with list id as key and name as value.
-            $lists_array = array();
-            if (is_array($response)) {
-                foreach ($response as $list) {
-                    $lists_array[$list[0]] = $list[1];
+            $offset = 0;
+            $loop   = true;
+            $limit  = 100;
+    
+            $lists_array = [];
+    
+            while ($loop === true) {
+                $response = $this->aweber_instance()->fetchEmailListNameAndId($this->account_id, $offset, $limit);
+    
+                // an array with list id as key and name as value.
+                if (is_array($response)) {
+                    foreach ($response as $list) {
+                        $lists_array[$list[0]] = $list[1];
+                    }
+        
+                    if (count($response) < $limit) {
+                        $loop = false;
+                    }
+        
+                    $offset += $limit;
+                } else {
+                    $loop = false;
                 }
             }
+            
+            
 
             return $lists_array;
 

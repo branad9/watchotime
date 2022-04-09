@@ -3,8 +3,8 @@
 Plugin Name: Disable XML-RPC-API
 Plugin URI: https://neatma.com/dsxmlrpc-plugin/
 Description: Lightweight plugin to disable XML-RPC API and Pingbacks,Trackbacks for faster and more secure website.
-Version: 2.1.1
-Tested up to: 5.8
+Version: 2.1.3
+Tested up to: 5.9
 Requires at least: 3.5
 Author: Neatma
 Author URI: https://neatma.com/
@@ -14,7 +14,7 @@ License: GPLv2
 //
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+	exit;
 }
 
 define('DSXMLRPC_FILE', plugin_dir_path(__FILE__));
@@ -45,7 +45,7 @@ function dsxmlrpc_get_option($option){
 }
 
 //
-// Fix IP list 
+// Fix IP list
 function dsxmlrpc_fix_ip($type){
 	if (!dsxmlrpc_get_option($type))  return;
 		$ip_list = dsxmlrpc_get_option($type);
@@ -55,10 +55,10 @@ function dsxmlrpc_fix_ip($type){
 			$ip = trim($ip);
 			if(!filter_var( $ip, FILTER_VALIDATE_IP ) === false){
 				if ($type == 'White-list-IPs') {
-				return "Allow from ".$ip. "\n"; 
+				return "Allow from ".$ip. "\n";
 				} elseif ($type == 'Black-list-IPs') {
-				return "Deny from ".$ip. "\n"; 
-				
+				return "Deny from ".$ip. "\n";
+
 				}
 			}
 		}
@@ -68,25 +68,30 @@ function dsxmlrpc_fix_ip($type){
 
 //
 // Fix htaccess permissions
-function dsxmlrpc_file_chmod() { 
-	 $htaccess_file = DSXMLRPC_HOME_PATH . '.htaccess';
-	  chmod($htaccess_file, 0755);
+function dsxmlrpc_file_chmod() {
+	$htaccess_file = DSXMLRPC_HOME_PATH . '.htaccess';
+	if (!is_writable($htaccess_file)){
+	  chmod($htaccess_file, 0644);
+	}
 
 }
+
 //
 // Fix htaccess permissions
-function dsxmlrpc_file_protect() { 
-	 $htaccess_file = DSXMLRPC_HOME_PATH . '.htaccess';
+function dsxmlrpc_file_protect() {
+	$htaccess_file = DSXMLRPC_HOME_PATH . '.htaccess';
+	if (is_writable($htaccess_file)){
 	  chmod($htaccess_file, 0444);
+	}
 }
 
 
 //
 // Disable access to xmlrpc.php completely with .htaccess file
-
 function dsxmlrpc_add_htaccess() {
 		 global $current_screen;
     	if ( $current_screen->id == 'toplevel_page_Security Settings' || $current_screen->id == 'plugins' ) {
+		dsxmlrpc_hotlinkfix();
 		
 	if (dsxmlrpc_get_option('jetpack-switcher')) {
 $jp_allowed_ips = '
@@ -104,40 +109,54 @@ Allow from 192.0.102.95/32';
 	} else {
 		$jp_allowed_ips = '';
 	}
- 	
+
 
 	if (!dsxmlrpc_get_option('dsxmlrpc-switcher') ) {
-
-		 $dsxmlrpc_allowed_ips = dsxmlrpc_fix_ip('White-list-IPs') . $jp_allowed_ips; 
+	     
+		 $allowed_ips = dsxmlrpc_fix_ip('White-list-IPs') . $jp_allowed_ips;
 $htaccess_code =
 '<Files xmlrpc.php>
-order deny,allow 
+order deny,allow
 deny from all
-'.$dsxmlrpc_allowed_ips.'
+'.$allowed_ips.'
 </Files>
 ';
 	} else {
-		
-	$dsxmlrpc_disallowed_ips =  dsxmlrpc_fix_ip('Black-list-IPs');
+
+	$disallowed_ips =  dsxmlrpc_fix_ip('Black-list-IPs');
 $htaccess_code =
 '<Files xmlrpc.php>
-order allow,deny 
+order allow,deny
 allow from all
-'.$dsxmlrpc_disallowed_ips.'
+'.$disallowed_ips.'
 </Files>
 ';
 	}
+		add_filter('xmlrpc_enabled', '__return_false');
+		
 		dsxmlrpc_file_chmod();
 		insert_with_markers(DSXMLRPC_HOME_PATH . '.htaccess' , 'DS-XML-RPC-API', $htaccess_code);
-		dsxmlrpc_file_protect();
-		
+		dsxmlrpc_get_option('htaccess protection') ? dsxmlrpc_file_protect() : '' ;
+			
 		}
 } add_action('admin_head', 'dsxmlrpc_add_htaccess' );
 
 
-
 //
-//Remove .htaccess codes when disabled
+//  Remove with markers from files (.htaccess)
+function dsxmlrpc_remove_with_markers($marker, $filename){ 
+	if (file_exists($filename)) {
+		$myfile = file_get_contents($filename);
+		$pattern = "/#.BEGIN $marker(?<=# BEGIN $marker).*(?=# END $marker)#.END $marker/sui";
+
+		$result = preg_replace($pattern, '', $myfile);
+		$result = preg_replace('/\s+$/sui', '', $result);
+		file_put_contents($filename, $result);
+	}
+}
+		
+//
+//  Remove .htaccess codes when disabled
 function dsxmlrpc_remove_htaccess($plugin) {
 	if ($plugin !== 'disable-xml-rpc-api/disable-xml-rpc-api.php')	{
 		return;
@@ -146,41 +165,64 @@ function dsxmlrpc_remove_htaccess($plugin) {
     $htaccess_file = DSXMLRPC_HOME_PATH . '.htaccess';
 	if(!is_writable ($htaccess_file) ) {
 		dsxmlrpc_file_chmod();
-	    insert_with_markers($htaccess_file, 'DS-XML-RPC-API', '');
-		dsxmlrpc_file_protect();
+		dsxmlrpc_remove_with_markers('DS-XML-RPC-API', $htaccess_file);
+		dsxmlrpc_remove_with_markers('DS-XML-RPC-FIX-HOTLINK', $htaccess_file);
+		dsxmlrpc_get_option('htaccess protection') ? dsxmlrpc_file_protect() : '' ;
 	} else {
-	    insert_with_markers($htaccess_file, 'DS-XML-RPC-API', '');
-		dsxmlrpc_file_protect();
-	}		
+
+		dsxmlrpc_remove_with_markers('DS-XML-RPC-API', $htaccess_file);
+		dsxmlrpc_remove_with_markers('DS-XML-RPC-FIX-HOTLINK', $htaccess_file);
+		dsxmlrpc_get_option('htaccess protection') ? dsxmlrpc_file_protect() : '' ;
+	}
+		delete_option( 'pand-' . md5('wpsg-notice') );
+		delete_option( 'pand-' . md5('dsxmlrpc-notice') );
 }
 add_action( 'deactivated_plugin' , 'dsxmlrpc_remove_htaccess', 10, 2);
 
+
+
 //
-//  unistallation actions
+//  Unistallation actions
 function dsxmlrpc_uninstall_action(){
 	delete_option( 'dsxmlrpc-settings' );
-	delete_option('dsxmlrpc-notice-forever');
-	
+	delete_option('pand-' . md5('wpsg-notice') );
+	delete_option('pand-' . md5('dsxmlrpc-notice') );
+
 }
+
+//
+// Update actions
+function dsxmlrpc_after_update( $upgrader_object, $options ) {
+    $current_plugin_path_name = plugin_basename( __FILE__ );
+ 
+    if ($options['action'] == 'update' && $options['type'] == 'plugin' ) {
+       foreach($options['plugins'] as $each_plugin) {
+          if ($each_plugin==$current_plugin_path_name) {
+             delete_option('pand-' . md5('wpsg-notice') );
+			 delete_option('pand-' . md5('dsxmlrpc-notice') );
+          }
+       }
+    }
+}
+add_action('upgrader_process_complete', 'dsxmlrpc_after_update',10, 2);
+
+//
+// Disable XML-RPC Methods
+function dsxmlrpc_dis_methods($xmlrpc) {
+$methods = dsxmlrpc_get_option('disabled-methods');
+	foreach($methods as $method) {
+
+      unset( $xmlrpc[$method] );
+		} return $xmlrpc;
+
+}
+if (dsxmlrpc_get_option('dsxmlrpc-switcher')){
+	add_filter( 'xmlrpc_methods',  'dsxmlrpc_dis_methods' );
+}
+
 
 
 //
-// Disable XML-RPC Methods 
-function dsxmlrpc_dis_methods($xmlrpc) {
-$methods = dsxmlrpc_get_option('disabled-methods');	
-	foreach($methods as $method) {
-		
-      unset( $xmlrpc[$method] );
-		} return $xmlrpc;
-		
-}
-	if (dsxmlrpc_get_option('dsxmlrpc-switcher')){
-	add_filter( 'xmlrpc_methods',  'dsxmlrpc_dis_methods' );
-	} 
-
-
-	
-// 
 // Get XML-RPC Disabled Methods
 function dsxmlrpc_get_methods($method) {
 			$option = dsxmlrpc_get_option('disabled-methods');
@@ -189,51 +231,50 @@ function dsxmlrpc_get_methods($method) {
 			}
 
 	}
-	
 
 
-
+// Remove x-pingback from header
 function dsxmlrpc_X_pingback_header( $headers ) {
    unset( $headers['X-Pingback'] );
          return $headers;
 }
 
-
+// Remove selected methods from xml rpc
 $dsxmlrpc_disabled_methods = dsxmlrpc_get_option('disabled-methods');
 if (is_array($dsxmlrpc_disabled_methods)) {
 	if(dsxmlrpc_get_option('dsxmlrpc-switcher') && array_search('x-pingback',$dsxmlrpc_disabled_methods)) {
 	add_filter( 'wp_headers', 'dsxmlrpc_X_pingback_header' );
 	add_filter('pings_open', '__return_false', PHP_INT_MAX);
-	}  
+	}
 }
 
 
 if( !empty(dsxmlrpc_get_option('xmlrpc-slug')) && dsxmlrpc_get_option('dsxmlrpc-switcher')){
-	
+
 	add_action('wp_loaded', 'dsxmlrpc_xmlrpc_rename_wp_loaded');
-		
+
 }
 
 
-// Rename the XML-RPC 
+// Rename the XML-RPC
 function dsxmlrpc_xmlrpc_rename_wp_loaded(){
-		
+
 	$page = dsxmlrpc_cur_page();
-	
+
 	if ($page === 'xmlrpc.php') {
 	$header_one = apply_filters('dsxmlrpc_header_1', 'HTTP/1.0 404 Not Found');
 	$header_two = apply_filters('dsxmlrpc_header_2', 'Status: 404 Not Found');
-	
+
 	header($header_one);
 	header($header_two);
-	
+
 	exit();
 	}
 
 	if($page !== dsxmlrpc_get_option('xmlrpc-slug')){
 		return false;
 	}
-	
+
 	@define('NO_CACHE', true);
 	@define('WTC_IN_MINIFY', true);
 	@define('WP_CACHE', false);
@@ -242,27 +283,27 @@ function dsxmlrpc_xmlrpc_rename_wp_loaded(){
 	error_reporting(E_ERROR | E_CORE_ERROR | E_COMPILE_ERROR);
 
 	include ABSPATH.'/xmlrpc.php';
-	
+
 	exit();
-	
+
 }
 
 // Find the page being accessed
 function dsxmlrpc_cur_page(){
-	
+
 	$blog_url = trailingslashit(get_bloginfo('url'));
-	
+
 	// Build the Current URL
 	$url = (is_ssl() ? 'https://' : 'http://').$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-	
+
 	if(is_ssl() && preg_match('/^http\:/is', $blog_url)){
 		$blog_url = substr_replace($blog_url, 's', 4, 0);
 	}
-	
+
 	// The relative URL to the Blog URL
 	$req = str_replace($blog_url, '', $url);
 	$req = str_replace('index.php/', '', $req);
-	
+
 	// We dont need the args
 	$parts = explode('?', $req, 2);
 	$relative = basename($parts[0]);
@@ -273,13 +314,13 @@ function dsxmlrpc_cur_page(){
 	$page = end($tmp);
 
 	return $page;
-	
+
 }
 
 //
-// Speed Up wordprees 
+// Speed Up wordprees
 
-/* remove emoji */
+		/* remove emoji */
 		if ( dsxmlrpc_get_option('remove-emojis') ) {
 			remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
 			remove_action( 'wp_print_styles', 'print_emoji_styles' );
@@ -289,7 +330,7 @@ function dsxmlrpc_cur_page(){
 			remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );
 			remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
 		}
-		/* slow heartbeat */
+		/* slow down the heartbeat */
 		if ( dsxmlrpc_get_option('slow-heartbeat') ) {
 			add_filter( 'heartbeat_settings', 'dsxmlrpc_slow_heartbeat'  );
 		}
@@ -310,6 +351,7 @@ function dsxmlrpc_cur_page(){
 		add_action('do_feed_rss2_comments', 'dsxmlrpc_disable_feed', 1);
 		add_action('do_feed_atom_comments', 'dsxmlrpc_disable_feed', 1);
 		}
+		/* Disable wp-json rest api */
 		if ( dsxmlrpc_get_option('json-rest-api') ) {
 			add_filter( 'rest_authentication_errors', function( $result ) {
 				if ( ! empty( $result ) ) {
@@ -322,34 +364,37 @@ function dsxmlrpc_cur_page(){
 			});
 		}
 		
+		/* remove wlw from manifest */
 		if ( dsxmlrpc_get_option('disable-wlw') ) {
 			remove_action( 'wp_head', 'wlwmanifest_link' );
 		}
 		/* disable built-in file editor */
-		if ( dsxmlrpc_get_option('disable-code-editor') ) {
+		if ( dsxmlrpc_get_option('disable-code-editor') && !defined('DISALLOW_FILE_EDIT') ) {
 			define( 'DISALLOW_FILE_EDIT', true );
 		}
 		/* disable oEmbed for youtube */
 		if ( dsxmlrpc_get_option('disable-oembed') ) {
 			add_action( 'wp_footer', 'dsxmlrpc_disable_oembed', 11 );
 		}
-		/* Remove the WordPress version info url parameter. */ 
+		/* Remove the WordPress version info url parameter. */
 		if ( dsxmlrpc_get_option('remove-wp-ver') ) {
 			remove_action( 'wp_head', 'wp_generator' );
-			add_filter( 'script_loader_src', 'dsxmlrpc_remove_ver_param'  );
-			add_filter( 'style_loader_src', 'dsxmlrpc_remove_ver_param'  );
+			
+			if (!is_admin()) { 
+				add_filter( 'script_loader_src', 'dsxmlrpc_remove_ver_param'  );
+				add_filter( 'style_loader_src', 'dsxmlrpc_remove_ver_param'  );
+			}
+
 		}
-			/* Fix Hotlink in images. */ 
-		if ( dsxmlrpc_get_option('hotlink-fix') ) {
-			add_action('admin_init', 'dsxmlrpc_hotlinkfix' );
-		}
+		
+
 	/**
 	 * Remove the WordPress version info url parameter.
 	 */
 	 function dsxmlrpc_remove_ver_param( $url ) {
 		return remove_query_arg( 'ver', $url );
 	}
-	
+	/* Slow down the wordpress hearbeat */
 	 function dsxmlrpc_slow_heartbeat( $settings ) {
 	    $settings['interval'] = 60;
 		return $settings;
@@ -358,16 +403,18 @@ function dsxmlrpc_cur_page(){
 	/**
 	 * Dequeue the oEmbed script.
 	 */
-	 function dsxmlrpc_disable_oembed() { 
-		wp_dequeue_script( 'wp-embed' ); 
+	 function dsxmlrpc_disable_oembed() {
+		wp_dequeue_script( 'wp-embed' );
 	}
-	
-		
-		
-	function dsxmlrpc_hotlinkfix() {
-		
-$home_url =  get_home_url();
 
+
+	/**
+	 * Fix hotlink issue.
+	 */
+	function dsxmlrpc_hotlinkfix() {
+		if ( dsxmlrpc_get_option('hotlink-fix') ) {
+			
+	$home_url =  get_home_url();
 $htaccess_code = '
 RewriteEngine on
 RewriteCond %{HTTP_REFERER} !^$
@@ -377,6 +424,10 @@ RewriteRule \.(jpg|jpeg|png|gif)$ – [NC,F,L] ';
 
 		dsxmlrpc_file_chmod();
 		insert_with_markers(DSXMLRPC_HOME_PATH . '.htaccess' , 'DS-XML-RPC-FIX-HOTLINK', $htaccess_code);
-		dsxmlrpc_file_protect();
-		
-} 
+		dsxmlrpc_get_option('htaccess protection') ? dsxmlrpc_file_protect() : '' ;
+		} else {
+		dsxmlrpc_file_chmod();
+		insert_with_markers(DSXMLRPC_HOME_PATH . '.htaccess' , 'DS-XML-RPC-FIX-HOTLINK', '');
+		dsxmlrpc_get_option('htaccess protection') ? dsxmlrpc_file_protect() : '' ;
+		}
+	}

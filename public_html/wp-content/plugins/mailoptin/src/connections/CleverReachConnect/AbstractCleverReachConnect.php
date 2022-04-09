@@ -36,6 +36,17 @@ class AbstractCleverReachConnect extends AbstractConnect
     }
 
     /**
+     * Reduce the expiration time by 2 weeks to avoid token not refreshing after a month.
+     *
+     * {\"error\":\"invalid_grant\",\"error_description\":\"Refresh token has expired\"}
+     * @param $val
+     */
+    public function get_expire_at($val)
+    {
+        return absint($val) - (2 * WEEK_IN_SECONDS);
+    }
+
+    /**
      * Return instance of cleverreach class.
      *
      * @return CleverReach|mixed
@@ -62,7 +73,7 @@ class AbstractCleverReachConnect extends AbstractConnect
             new OAuthCredentialStorage([
                 'cleverreach.access_token'  => $access_token,
                 'cleverreach.refresh_token' => $refresh_token,
-                'cleverreach.expires_at'    => $expires_at,
+                'cleverreach.expires_at'    => $this->get_expire_at($expires_at),
             ]));
 
         if ($instance->hasAccessTokenExpired()) {
@@ -86,7 +97,7 @@ class AbstractCleverReachConnect extends AbstractConnect
                     new OAuthCredentialStorage([
                         'cleverreach.access_token'  => $result['data']['access_token'],
                         'cleverreach.refresh_token' => $result['data']['refresh_token'],
-                        'cleverreach.expires_at'    => $expires_at,
+                        'cleverreach.expires_at'    => $this->get_expire_at($expires_at),
                     ]));
 
             } catch (\Exception $e) {

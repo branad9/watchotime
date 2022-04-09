@@ -94,7 +94,7 @@ class Subscription extends AbstractDripConnect
                 $lead_data['tags'] = array_map('trim', explode(',', $lead_tags));
             }
 
-            $lead_data = array_filter($lead_data, [$this, 'data_filter']);
+            $lead_data = apply_filters('mo_connections_drip_optin_payload', array_filter($lead_data, [$this, 'data_filter']), $this);
 
             $data = new Dataset('subscribers', $lead_data);
 

@@ -56,8 +56,8 @@ class Connect extends AbstractSendGridConnect implements ConnectionInterface
         ];
 
         $replace = [
-            // not working at the time of testing. [Weblink] seem to be the older tag which automatically gets replaced with {{weblink}}
-            '{{weblink}}',
+            // see https://docs.sendgrid.com/ui/sending-email/editor
+            '{{Weblink}}',
             '{{{unsubscribe}}}'
         ];
 

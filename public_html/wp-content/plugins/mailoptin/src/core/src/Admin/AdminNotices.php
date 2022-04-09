@@ -184,7 +184,7 @@ class AdminNotices
         );
         $label  = __('Sure! I\'d love to give a review', 'mailoptin');
 
-        $dismiss_label = __('Dimiss Forever', 'mailoptin');
+        $dismiss_label = __('Dismiss Forever', 'mailoptin');
 
         $notice .= "<div style=\"margin:10px 0 0;\"><a href=\"$review_url\" target='_blank' class=\"button-primary\">$label</a></div>";
         $notice .= "<div style=\"margin:10px 0 0;\"><a href=\"$dismiss_url\">$dismiss_label</a></div>";
@@ -229,7 +229,7 @@ class AdminNotices
         if ( ! class_exists('WooCommerce')) return;
 
         $upgrade_url = 'https://mailoptin.io/integrations/woocommerce/?utm_source=wp_dashboard&utm_medium=upgrade&utm_campaign=woo_admin_notice';
-        $notice      = sprintf(__('Did you know you can display targeted messages and optin forms across your WooCommerce store and also automatically send email alert of new products to your subscribers and customers? %sLearn more%s', 'mailoptin'),
+        $notice      = sprintf(__('Did you know you can display targeted message & optin forms across your WooCommerce store, add customers to your email list after their purchase, and automatically send email alert of new products? %sLearn more%s', 'mailoptin'),
             '<a href="' . $upgrade_url . '" target="_blank">', '</a>'
         );
         echo '<div data-dismissible="show_woocommerce_features-forever" class="notice notice-info is-dismissible">';

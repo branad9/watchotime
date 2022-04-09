@@ -71,7 +71,7 @@ class Subscription extends AbstractMailerliteConnect
                 }
             }
 
-            $lead_data = array_filter($lead_data, [$this, 'data_filter']);
+            $lead_data = apply_filters('mo_connections_mailerlite_optin_payload', array_filter($lead_data, [$this, 'data_filter']), $this);
 
             $response = $this->mailerlite_instance()->groups()->addSubscriber($this->list_id, $lead_data);
 

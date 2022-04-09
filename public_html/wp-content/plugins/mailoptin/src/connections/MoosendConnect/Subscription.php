@@ -51,7 +51,7 @@ class Subscription extends AbstractMoosendConnect
                 }
             }
 
-            $args = array_filter($args, [$this, 'data_filter']);
+            $args = apply_filters('mo_connections_moosend_optin_payload', array_filter($args, [$this, 'data_filter']), $this);
 
             $this->moosend_instance()->add_subscriber($this->list_id, $args);
 

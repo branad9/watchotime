@@ -1,8 +1,8 @@
 <?php
 /**
- * Email Verification for WooCommerce - Section Settings
+ * Email Verification for WooCommerce - Section Settings.
  *
- * @version 2.1.1
+ * @version 2.2.7
  * @since   1.0.0
  * @author  WPFactory
  */
@@ -41,6 +41,18 @@ class Alg_WC_Email_Verification_Settings_Section {
 	}
 
 	/**
+	 * get_paid_statuses_msg.
+	 *
+	 * @version 2.2.4
+	 * @since   2.2.4
+	 *
+	 * @return string
+	 */
+	function get_paid_statuses_msg() {
+		return __( 'Paid statuses:', 'emails-verification-for-woocommerce' ) . ' ' . alg_wc_ev_array_to_string( wc_get_is_paid_statuses(), array( 'glue' => ', ', 'item_template' => '<code>{value}</code>' ) );
+	}
+
+	/**
 	 * settings_section.
 	 *
 	 * @version 1.0.0
@@ -76,7 +88,7 @@ class Alg_WC_Email_Verification_Settings_Section {
 	/**
 	 * separate_email_option_msg.
 	 *
-	 * @version 2.0.4
+	 * @version 2.2.7
 	 * @since   1.8.0
 	 *
 	 * @param string $requirement 'enabled' | 'disabled'
@@ -89,7 +101,7 @@ class Alg_WC_Email_Verification_Settings_Section {
 			'disabled' => __( 'disabled', 'emails-verification-for-woocommerce' ),
 		);
 		return sprintf( __( 'The option "%s > %s" needs to be %s.', 'emails-verification-for-woocommerce' ),
-			__( 'Email', 'emails-verification-for-woocommerce' ), __( 'Send as a separate email', 'emails-verification-for-woocommerce' ), '<strong>' . $translation[ $requirement ] . '</strong>' );
+			'<strong>' . __( 'Email', 'emails-verification-for-woocommerce' ) . '</strong>', '<strong>' . __( 'Send as a separate email', 'emails-verification-for-woocommerce' ) . '</strong>', '<strong>' . $translation[ $requirement ] . '</strong>' );
 	}
 
 	/**

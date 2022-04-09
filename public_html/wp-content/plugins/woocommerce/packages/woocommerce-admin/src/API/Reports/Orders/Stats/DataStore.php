@@ -198,7 +198,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		);
 
 		// Product attribute filters.
-		$attribute_subqueries = $this->get_attribute_subqueries( $query_args );
+		$attribute_subqueries = $this->get_attribute_subqueries( $query_args, $orders_stats_table );
 		if ( $attribute_subqueries['join'] && $attribute_subqueries['where'] ) {
 			// Build a subquery for getting order IDs by product attribute(s).
 			// Done here since our use case is a little more complicated than get_object_where_filter() can handle.
@@ -544,10 +544,8 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			$parent_order = wc_get_order( $order->get_parent_id() );
 			if ( $parent_order ) {
 				$data['parent_id'] = $parent_order->get_id();
-				$format[]          = '%d';
+				$data['status']    = self::normalize_order_status( $parent_order->get_status() );
 			}
-		} else {
-			$data['returning_customer'] = self::is_returning_customer( $order );
 		}
 
 		// Update or add the information to the DB.
@@ -630,11 +628,14 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 	/**
 	 * Check to see if an order's customer has made previous orders or not
 	 *
-	 * @param array $order WC_Order object.
+	 * @param array     $order WC_Order object.
+	 * @param int|false $customer_id Customer ID. Optional.
 	 * @return bool
 	 */
-	public static function is_returning_customer( $order ) {
-		$customer_id = \Automattic\WooCommerce\Admin\API\Reports\Customers\DataStore::get_existing_customer_id_from_order( $order );
+	public static function is_returning_customer( $order, $customer_id = null ) {
+		if ( is_null( $customer_id ) ) {
+			$customer_id = \Automattic\WooCommerce\Admin\API\Reports\Customers\DataStore::get_existing_customer_id_from_order( $order );
+		}
 
 		if ( ! $customer_id ) {
 			return false;

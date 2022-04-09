@@ -1,14 +1,14 @@
-﻿=== MailOptin - Popup, Optin Form & Email Newsletters for Mailchimp, HubSpot, AWeber ===
+﻿=== Popup, Optin Form & Email Newsletters for Mailchimp, HubSpot, AWeber - MailOptin ===
 Contributors: properfraction, collizo4sky
 Donate link: https://mailoptin.io/pricing/
 Tags: popup, popup maker, newsletter, mailchimp, contact form, aweber, popups, constant contact, campaignmonitor, campaign monitor, convertkit, forms, infusionsoft, contact form, wpforms, wpform, cf7, contact form 7, ninja forms, formidable forms, gravity forms, forminator, activecampaign, drip, sendy, hubspot, mailerlite, sendinblue, klaviyo, mailjet, ontraport, constantcontact, jilt, vertical response, cleverreach, zoho, sendgrid, zoho crm, zoho campaigns, moosend, godaddy, getgist, sendlane, myemma, fluentcrm, mailster, getresponse, sendfox, wemail, autoresponder, wpml, woocommerce, lightbox, modal, emailoctopus, pop up, email, exit intent, user registration, ninja form
 Requires at least: 4.6
 Requires PHP: 7.0.10
-Tested up to: 5.8
-Stable tag: 1.2.38.2
+Tested up to: 5.9
+Stable tag: 1.2.45.2
 License: GPL-2.0+
 
-Create popups, optin forms to get email newsletter subscribers via an easy form builder and popup maker. Mailchimp, ConvertKit, Infusionsoft, ActiveCampaign, Campaign Monitor, Constant Contact & more.
+Create popup, optin forms to get email subscribers via an easy form builder and popup maker. Mailchimp, ConvertKit, Infusionsoft, ActiveCampaign, Campaign Monitor, Constant Contact & more.
 
 == Description ==
 
@@ -91,7 +91,15 @@ There are cases where you would find popups, sidebar and in-post optin forms an 
 
 Block a portion of your content for subscribers only. [Content locking](https://mailoptin.io/article/setup-wordpress-content-locking/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion) requires users to enter their email addresses in order to see the full article, otherwise they will see a blured content.
 
+= WooCommerce Order, Customer & Checkout Integration =
+
+MailOptin automatically [syncs your customers to your email list](https://mailoptin.io/article/woocommerce-mailchimp-aweber-more/) or gives them the option to subscribe during checkout.
+
+Want to segment your customers based on their order from a specific product category or tag? you're covered.
+
 = Conversion Boosting Optin Display Rules & Triggers =
+
+MailOptin includes several [WooCommerce display rules & triggers](https://mailoptin.io/woocommerce-targeting/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion) to display targeted call-to-actions across your WooCommerce shop. Want to display a popup when a product is added to the cart? we've got you covered. The following conditions are available for creating upsells, down-sells & cross-sells: Products in Cart, Customer has Purchased, Cart Item Count, Cart Total and Customer Spent.
 
 Timing is everything. This is why MailOptin continually tracks visitors interaction on your website and display the right message or optin form at the right time they are likely to convert.
 
@@ -116,6 +124,7 @@ The [Device Targeting](https://mailoptin.io/device-targeting-wordpress/?utm_sour
 * **Advance Analytics:** Get important metrics to improve your lead-generation strategy and make data-driven decisions to increase your revenue.
 * **Custom CSS:** An advance customization feature that allows you to customize your optin campaigns with your CSS styles.
 * **Display Effect:** 30+ built-in CSS3 animation effects to capture your visitor’s attention and bring awareness to your optin forms.
+* **Sound Effect:** Play sounds when your optin campaigns are displayed to grab users attention. [Learn more](https://mailoptin.io/article/add-sound-effects-optin-campaign/?utm_source=wprepo&utm_medium=link&utm_campaign=liteversion)
 * **MailOptin Leads:** It stores your leads within MailOptin as well as important data about your subscribers that normally can’t be passed to your ESP such as the referrer, time of conversion and where it occurred.
 * **Shortcode & Template Tag Embed:** Display optin forms anywhere on your website page and posts with shortcodes and anywhere on your theme with template tags.
 * **Autoresponder:** Immediately send an email to leads or subscribers that sign up to your email list.
@@ -171,34 +180,34 @@ Yes, MailOptin has full translation and localization support. All .mo and .po tr
 
 == Changelog ==
 
-= 1.2.38.2 =
-* Fixed fatal error in PHP 8
+= 1.2.45.2 =
+* Improved the reliability of the new Constant Contact authentication.
 
-= 1.2.38.1 =
-* Premium: Added autologin option to [user registration integration](https://mailoptin.io/article/create-wordpress-user-registration-form).
-* Fixed PHP index error causing elementor forms not to work.
-* Fixed Fatal error in WPForms integration.
-* Fixed VTI issue where file without extension was failing.
-* Fixed bug where inline css was shown in email message.
-* Upgraded league/csv library to v9.
-* Added more filters to email campaigns templatifiers.
+= 1.2.45.1 =
+* Move to a new authentication system for Constant Contact v3 integration. [Learn more](https://mailoptin.io/article/connect-mailoptin-with-constant-contact/#v3)
 
-= 1.2.38.0 =
-* Improvements to Constant Contact v3 token refreshing.
-* Fixed before&after content editor in email campaign not working.
-* Fixed incompatibility with upcoming WP 5.8.
-* Made custom email template shortcodes for new post notification available everywhere.
-* Added filter for adding post author as email sender.
+= 1.2.45.0 =
+* Added support for new Constant Contact v3 integration endpoints - REAUTHORIZE URGENTLY.
+* Added new sidebar and inpost optin themes.
 
-= 1.2.37.2 =
-* Improved accuracy of detecting when cron is not working.
-* Made cron admin notice dismissible.
+= 1.2.44.0 =
+* Pro feature [Sync WooCommerce customers to ESP support after a purchase](https://mailoptin.io/?p=32886&ref=changelog).
+* Added filter to disable gutenberg block.
 
-= 1.2.37.1 =
-* Performance improvements.
+= 1.2.43.0 =
+* Fixed bug where not all AWeber list were retrieved.
+* Fixed bug with background image change not reflecting in customizer.
+* Added filter to post collection function.
+* Added alt when optin image is present.
 
-= 1.2.37.0 =
-* Premium: Introduced [Content locker](https://mailoptin.io/?p=31106) feature.
-* Detect when cron isn’t working and display admin notice to that effect.
+= 1.2.42.2 =
+* Improved CCv3 oauth connection.
+* Switched hubspot to more v3 endpoints
+
+= 1.2.42.0 =
+* Pro feature [optin sound effect](https://mailoptin.io/?p=32472&ref=changelog).
+* Added 'mo-optin-success-state' class to optin form when a user subscribes.
+* Increased HubSpot cache expiration time.
+* Fixed range slider customizer control.
 
 See the [changelog file](https://plugins.svn.wordpress.org/mailoptin/trunk/changelog.txt) for full change log information.

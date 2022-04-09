@@ -1,8 +1,8 @@
 <?php
 /**
- * Email Verification for WooCommerce - Functions
+ * Email Verification for WooCommerce - Functions.
  *
- * @version 2.0.9
+ * @version 2.2.4
  * @since   1.9.0
  * @author  WPFactory
  */
@@ -25,7 +25,7 @@ if ( ! function_exists( 'alg_wc_ev_add_notice' ) ) {
 	/**
 	 * alg_wc_ev_add_notice.
 	 *
-	 * @version 2.0.9
+	 * @version 2.1.6
 	 * @since   2.0.9
 	 *
 	 * @param $message
@@ -35,13 +35,19 @@ if ( ! function_exists( 'alg_wc_ev_add_notice' ) ) {
 	 */
 	function alg_wc_ev_add_notice( $message, $notice_type = 'success', $data = array(), $args = null ) {
 		$args = wp_parse_args( $args, array(
-			'clear_previous_messages' => 'yes' === get_option( 'alg_wc_ev_clear_previous_messages', 'no' )
+			'clear_previous_messages' => 'yes' === get_option( 'alg_wc_ev_clear_previous_messages', 'no' ),
+			'check_previous_messages' => true
 		) );
 		$clear_previous_messages = $args['clear_previous_messages'];
 		if ( $clear_previous_messages ) {
 			wc_clear_notices();
 		}
-		wc_add_notice( $message, $notice_type, $data );
+		if (
+			! $args['check_previous_messages'] ||
+			! wc_has_notice( $message, $notice_type )
+		) {
+			wc_add_notice( $message, $notice_type, $data );
+		}
 	}
 }
 
@@ -62,7 +68,7 @@ if ( ! function_exists( 'alg_wc_ev_is_valid_paying_user' ) ) {
 	/**
 	 * alg_wc_ev_is_valid_paying_user.
 	 *
-	 * @version 1.9.5
+	 * @version 2.2.4
 	 * @since   1.9.5
 	 *
 	 * @param $user_id
@@ -74,14 +80,13 @@ if ( ! function_exists( 'alg_wc_ev_is_valid_paying_user' ) ) {
 	 */
 	function alg_wc_ev_is_valid_paying_user( $user_id ) {
 		if (
-			alg_wc_ev()->core->is_user_verified_by_user_id( $user_id )
-			|| 'no' === get_option( 'alg_wc_ev_block_nonpaying_users_activation', 'no' )
-			|| empty( $user = get_user_by( 'id', $user_id ) )
-			|| empty( $customer = new \WC_Customer( $user_id ) )
-			|| (
-				! empty( $role_checking = get_option( 'alg_wc_ev_block_nonpaying_users_activation_role', array('customer') ) ) && count( array_intersect( $role_checking, $user->roles ) ) == 0
+			alg_wc_ev()->core->is_user_verified_by_user_id( $user_id ) ||
+			(
+				! empty( $user = get_user_by( 'id', $user_id ) ) &&
+				! empty( $customer = new \WC_Customer( $user_id ) ) &&
+				( empty( $role_checking = get_option( 'alg_wc_ev_block_nonpaying_users_activation_role', array( 'customer' ) ) ) || count( array_intersect( $role_checking, $user->roles ) ) > 0 ) &&
+				$customer->get_is_paying_customer()
 			)
-			|| $customer->get_is_paying_customer()
 		) {
 			return true;
 		}

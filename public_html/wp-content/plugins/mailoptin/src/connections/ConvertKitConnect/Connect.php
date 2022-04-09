@@ -84,7 +84,7 @@ class Connect extends AbstractConvertKitConnect implements ConnectionInterface
                     $sequence_array[$sequence->id] = $sequence->name;
                 }
 
-                set_transient($cache_key, $sequence_array, MINUTE_IN_SECONDS);
+                set_transient($cache_key, $sequence_array, 5 * MINUTE_IN_SECONDS);
             }
 
             return $sequence_array;

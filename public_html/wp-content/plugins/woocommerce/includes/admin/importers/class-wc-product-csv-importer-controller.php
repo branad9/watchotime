@@ -92,7 +92,13 @@ class WC_Product_CSV_Importer_Controller {
 	 * @return bool
 	 */
 	public static function is_file_valid_csv( $file, $check_path = true ) {
-		if ( $check_path && apply_filters( 'woocommerce_product_csv_importer_check_import_file_path', true ) && false !== stripos( $file, '://' ) ) {
+		/**
+		 * Can be used to override the decision to check the import file path.
+		 *
+		 * @param bool   $check_import_file_path If the import file path should be checked.
+		 * @param string $file                   Path of the file to be checked.
+		 */
+		if ( $check_path && apply_filters( 'woocommerce_product_csv_importer_check_import_file_path', true, $file ) && false !== stripos( $file, '://' ) ) {
 			return false;
 		}
 
@@ -355,7 +361,10 @@ class WC_Product_CSV_Importer_Controller {
 			wp_schedule_single_event( time() + DAY_IN_SECONDS, 'importer_scheduled_cleanup', array( $id ) );
 
 			return $upload['file'];
-		} elseif ( file_exists( ABSPATH . $file_url ) ) {
+		} elseif (
+			( 0 === stripos( realpath( ABSPATH . $file_url ), ABSPATH ) ) &&
+			file_exists( ABSPATH . $file_url )
+		) {
 			if ( ! self::is_file_valid_csv( ABSPATH . $file_url ) ) {
 				return new WP_Error( 'woocommerce_product_csv_importer_upload_file_invalid', __( 'Invalid file type. The importer supports CSV and TXT file formats.', 'woocommerce' ) );
 			}
@@ -566,6 +575,8 @@ class WC_Product_CSV_Importer_Controller {
 						/* translators: %d: Attribute number */
 						__( 'Attribute %d default', 'woocommerce' ) => 'attributes:default',
 						/* translators: %d: Download number */
+						__( 'Download %d ID', 'woocommerce' ) => 'downloads:id',
+						/* translators: %d: Download number */
 						__( 'Download %d name', 'woocommerce' ) => 'downloads:name',
 						/* translators: %d: Download number */
 						__( 'Download %d URL', 'woocommerce' ) => 'downloads:url',
@@ -721,6 +732,7 @@ class WC_Product_CSV_Importer_Controller {
 			'downloads'          => array(
 				'name'    => __( 'Downloads', 'woocommerce' ),
 				'options' => array(
+					'downloads:id' . $index   => __( 'Download ID', 'woocommerce' ),
 					'downloads:name' . $index => __( 'Download name', 'woocommerce' ),
 					'downloads:url' . $index  => __( 'Download URL', 'woocommerce' ),
 					'download_limit'          => __( 'Download limit', 'woocommerce' ),

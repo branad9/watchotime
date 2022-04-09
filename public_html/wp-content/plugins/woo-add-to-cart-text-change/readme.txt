@@ -1,15 +1,15 @@
-=== WooCommerce add to cart Text change and Customize botton, add custom Icon ===
+=== Add to Cart Text Changer and Customize Button, Add Custom Icon ===
 Contributors: codersaiful
 Donate link: https://account.ultraaddons.com/product/woocommerce-add-to-cart-text-change-and-button-customise/?attribute_pa_licences-type=5-sites
-Tags: woocommerce add to cart,add to cart, woocommerce plugin,add to cart, single product cart button, add to cart button
+Tags: woocommerce add to cart, add to cart, woocommerce plugin, add to cart text change, single product cart button, add to cart button
 Requires at least: 4.0
-Tested up to: 5.3.2
+Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 4.3
+Stable tag: 1.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Easy handle: WooCommerce add to cart Text change and Customize botton, add custom Icon. With icon of shop or cart. Almost like pro features. Now can handle all type of product and for all type page. Like Shop page, Archive page, Single Page etc. Easily change Add_to_Cart Button Text. Sometime we need to change WooComerce product's Default 'Add To Cart' button text. This plugin will help you to put any custom text for Add_to_Cart button.
+Easy handle: Add to Cart Text Changer and Customize Button, Add Custom Icon. With icon of shop or cart. Almost like pro features. Now can handle all type of product and for all type page. Like Shop page, Archive page, Single Page etc. Easily change Add_to_Cart Button Text. Sometime we need to change WooComerce product's Default 'Add To Cart' button text. This plugin will help you to put any custom text for Add_to_Cart button.
 
 == Description ==
 Supported with Latest WordPress. And new feature Added. Almost like pro features. Now can handle all type of product and for all type page. Like Shop page, Archive page, Single Page etc. 
@@ -84,6 +84,13 @@ Yes, it will it work Shop/Archive/Tag page.
 `/assets/screenshot-9.png`
 
 == Changelog ==
+= 1.8 =
+* Escaping issue fixed
+* Codestar framework updated to latest version
+* Bug fixed
+
+= 1.7 =
+* Name Changed and escapping 
 
 = 1.6 =
 * Custom Icon 

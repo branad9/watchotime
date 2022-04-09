@@ -65,7 +65,7 @@ class Subscription extends AbstractSendyConnect
                 }
             }
 
-            $lead_data = array_filter($lead_data, [$this, 'data_filter']);
+            $lead_data = apply_filters('mo_connections_sendy_optin_payload', array_filter($lead_data, [$this, 'data_filter']), $this);
 
             $response = $sendy->subscribe($lead_data);
 

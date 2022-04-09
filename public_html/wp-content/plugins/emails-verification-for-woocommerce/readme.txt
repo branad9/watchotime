@@ -1,9 +1,9 @@
 === Email Verification for WooCommerce ===
-Contributors: wpcodefactory
+Contributors: wpcodefactory, Karzin, jaedm97
 Tags: woocommerce, email, verification, email verification, woo commerce
 Requires at least: 4.4
-Tested up to: 5.8
-Stable tag: 2.1.3
+Tested up to: 5.9
+Stable tag: 2.2.9
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -13,32 +13,89 @@ Verify user emails in WooCommerce. Beautifully.
 
 **Email Verification for WooCommerce** plugin lets you add email verification to WooCommerce.
 
-= Main Features =
+### &#9989; Main Features ###
 
 * Require **email verification** for new user registrations.
+
+
 * Optionally enable email verification for **already registered users**.
+
+
 * Skip email verification for selected **user roles**.
-* Customize **frontend messages**.
+
+
+* Customize **verification messages** on frontend.
+
+
 * Optionally manually **verify**, **unverify**, **resend** email activation link **by admin**.
-* Optionally **delete unverified users** from the database (manually or automatically once per week).
+
+
+* Optionally **delete unverified users** from the database (manually or automatically once per week, day or hour).
+
+
 * Select if you want to send verification as a **separate email**, or **append** it to the standard WooCommerce "Customer new account" email.
+
+
 * **Delay** standard WooCommerce **"Customer new account" email** until after successful verification (in a separate email).
+
+
 * **Prevent** automatic user **login after registration**, including registration during checkout.
+
+
+* **Content blocking**: Block content from unverified users.
+
+
 * And more...
 
-= Premium Version =
+### &#127942; Premium Version ###
 
-[Email Verification for WooCommerce Pro](https://wpfactory.com/item/email-verification-for-woocommerce/) includes:
+[Email Verification for WooCommerce Pro](https://wpfactory.com/item/email-verification-for-woocommerce/) features:
 
-* **User email customization options**, including wrapping in standard WooCommerce email template.
+* **Activation email customization options**, including wrapping in standard WooCommerce email template.
+
+
 * **Block "Thank you"** (i.e. "Order received") **page** access for non-verified users.
+
+
 * **Block** standard WooCommerce customer **order emails** ("Order on-hold", "Processing order", "Completed order") for all non-verified users.
+
+
 * **Block guests** from adding products to the cart.
+
+
 * **Block checkout process** for non-verified users.
+
+
+* **Content blocking customization**: Block content from unverified users like products or block content by function, as shop pages, category pages and more. Customize the error notice and the page the unverified user is going to be redirected to in case he tries to access the content.
+
+
 * Set activation link **expiration time**.
-* Send **email to the admin** when new user verifies his email.
-* Set emails **blacklist**.
-* Automatically accept email verification from [social login](https://codecanyon.net/item/woocommerce-social-login-wordpress-plugin/8495883) plugin.
+
+
+* Send **email to the admin** when a new user verifies his email.
+
+
+* Set emails on a **denylist**.
+
+
+* Automatically unverify users who have **changed their emails**.
+
+
+* Automatically verify users on **password reset**.
+
+
+* **Customize** the **verification info** completely.
+
+
+* **REST API**: Verify users using the REST API with the `alg_wc_ev/v1/verify` endpoint.
+
+
+* **Compatibility** options with:
+  * [Social Login - WPWeb](https://woocommerce.com/products/woocommerce-social-login/) plugin.
+  * [Social Login - SkyVerge](https://codecanyon.net/item/woocommerce-social-login-wordpress-plugin/8495883) plugin.
+  * [Super Socializer](https://wordpress.org/plugins/super-socializer/) plugin.
+  * [Nextend Social Login](https://codecanyon.net/item/woocommerce-social-login-wordpress-plugin/8495883) plugin.
+  * [WooMail](https://codecanyon.net/item/email-customizer-for-woocommerce-with-drag-drop-builder-woo-email-editor/22400984) plugin.
 
 = Feedback =
 
@@ -77,6 +134,9 @@ If just some of them are already enabled and even so it doesn't work, try to ena
 
 = How to prevent duplicated success message after account verification? =
 Please try to use **General > Redirect on success** option as **Do not redirect**
+
+= If a unverified user tries to login how to priorize verification error message over incorrect password ? =
+Try to set the **Advanced > Authenticate filter** option as **authenticate filter**
 
 = What can I do if the error messages are not showing? =
 If an unverified user is trying to login and the error message (Your account has to be activated before you can login...) is not getting displayed you can try two different approaches:
@@ -140,6 +200,79 @@ Params for the `[alg_wc_ev_email_content_placeholder]` shortcode:
 3. Start by visiting plugin settings at "WooCommerce > Settings > Email Verification".
 
 == Changelog ==
+
+= 2.2.9 - 18/03/2022 =
+* Dev - Move compatibility code to a new class.
+* Dev - Emails - Implement functionality of sending confirmation email to user.
+* WC tested up to: 6.3.
+
+= 2.2.8 - 02/03/2022 =
+* Dev - Improve `Alg_WC_Email_Verification_Logouts::block_unverified_user_login()`.
+* Dev - Compatibility - Essential Addons for Elementor - Add option to Verify users who register or log in from Login Register form element.
+* WC tested up to: 6.2.
+
+= 2.2.7 - 31/01/2022 =
+* Dev - Compatibility - Email Customizer - Create option that allows a `alg_wc_ev_ec_email_content` action hook display the activation email content.
+* Dev - Add more strings to `wpml-config.xml`.
+* Tested up to: 5.9.
+
+= 2.2.6 - 19/01/2022 =
+* Fix - Blocking - Block order emails - Users don't receive the emails when accounts are activated automatically after the order is paid.
+* Dev - Move "Advanced > Block order emails" to "Blocking" section.
+* Dev - Remove `$code` param from `alg_wc_ev_user_account_activated` and `alg_wc_ev_verify_email_error` actions.
+* Dev - Change `Alg_WC_Email_Verification_Core::verify()` parameter from `is_rest_api` to `directly`.
+* WC tested up to: 6.1.
+
+= 2.2.5 - 10/12/2021 =
+* Fix - Users can't activate the account.
+
+= 2.2.4 - 08/12/2021 =
+* Dev - Move "Auto verify paying customers" to General > Account verification.
+* WC tested up to: 5.9.
+
+= 2.2.3 - 21/10/2021 =
+* Dev - General - Verification info - Add customization content to `wpml-config.xml`.
+
+= 2.2.2 - 15/10/2021 =
+* Fix - Clicking on resend link from WP 2FA plugin triggers an error.
+* WC tested up to: 5.8.
+
+= 2.2.1 - 12/10/2021 =
+* Fix - Check for `WP_Background_Process` class before trying to use it.
+
+= 2.2.0 - 07/10/2021 =
+* Dev - Admin - Add "Allowed user roles" option allowing to manage which user roles will interact with the admin interface from the plugin.
+
+= 2.1.9 - 27/09/2021 =
+* Dev - Email - Create `wpml-config.xml` file with admin email options.
+* Improve admin settings.
+* WC tested up to: 5.7.
+
+= 2.1.8 - 15/09/2021 =
+* Fix - User can't resend activation email if "Send as a separate email" option is disabled.
+* Fix - Email - Activation email - Change "Email content" default value in order to prevent possible issues from some email services like Outlook/Hotmail.
+* Dev - Email - Activation email - Create "Smart" value to "Email template" option.
+
+= 2.1.7 - 13/09/2021 =
+* Fix - Email - Verify nonce in order to resend the activation email.
+
+= 2.1.6 - 27/08/2021 =
+* Fix - General - Redirect on success option.
+* Dev - Functions - Create the param `check_previous_messages` to check if the message has been added previously.
+* Dev - Improve `is_plugin_active()` function.
+* WC tested up to: 5.6.
+
+= 2.1.5 - 19/08/2021 =
+* Dev - Advanced - Improve "Authenticate filter" option.
+* Improve readme.
+
+= 2.1.4 - 09/08/2021 =
+* Fix - Possible duplicated activation message.
+* Dev - General - Add new option to verify the account if password is reset.
+* Dev - Advanced - Add option to use `alg_wc_ev/v1/verify` REST API endpoint.
+* Dev - Improve main `verify()` function.
+* Dev - Improve one-time activation link function.
+* Reorganize general section on admin settings.
 
 = 2.1.3 - 28/07/2021 =
 * Dev - Add `[alg_wc_ev_email_content_placeholder]` shortcode with `user_email` param.

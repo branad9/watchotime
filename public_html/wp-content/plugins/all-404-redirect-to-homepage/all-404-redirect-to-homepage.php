@@ -1,14 +1,17 @@
 <?php
 /*
-Plugin Name: All 404 Redirect  to Homepage
-Plugin URI: http://www.clogica.com
+Plugin Name: All 404 Redirect to Homepage
+Plugin URI: https://www.wp-buy.com
 Description: a plugin to redirect 404 pages to home page or any custom page
-Author: Fakhri Alsadi
-Version: 1.21
-Author URI: http://www.clogica.com
+Author: wp-buy
+Version: 3.4
+Author URI: https://www.wp-buy.com
 */
+register_activation_hook( __FILE__, 'p404_modify_htaccess' );
+register_deactivation_hook( __FILE__, 'p404_clear_htaccess' );
 
 if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'WP_CONTENT_DIR' ) ) exit;
 
 define( 'OPTIONS404', 'options-404-redirect-group' );
 require_once ('functions.php');
@@ -19,16 +22,20 @@ add_action( 'admin_enqueue_scripts', 'p404_enqueue_styles_scripts' );
 add_action('wp_ajax_P404REDIRECT_HideMsg', 'P404REDIRECT_HideMsg'); 
 
 
-register_activation_hook( __FILE__ , 'p404_install' );
-register_deactivation_hook( __FILE__ , 'p404_uninstall' );
+function P404REDIRECT__filter_action_links( $links ) { 
+	$links['settings'] = sprintf('<a href="%s">Settings</a>', admin_url( 'admin.php?page=all-404-redirect-to-homepage.php' )); 
+	$links['MorePlugins'] = sprintf('<a href="%s"><b style="color:#f18500">More Plugins</b></a>', admin_url( 'plugin-install.php?s=wp-buy&tab=search&type=author' )); 
+	return $links;
+}
+add_filter( 'plugin_action_links_'.plugin_basename(__FILE__), 'P404REDIRECT__filter_action_links', 10, 1 );
+
 
 
 function p404_redirect()
 {
 	if(is_404()) 
 	{
-	 	
-            $options= P404REDIRECT_get_my_options();
+        $options= P404REDIRECT_get_my_options();
 	    $link=P404REDIRECT_get_current_URL();
 	    if($link == $options['p404_redirect_to'])
 	    {
@@ -37,9 +44,9 @@ function p404_redirect()
 	    }
 	    
 	 	if($options['p404_status']=='1' & $options['p404_redirect_to']!=''){
-                        $links = P404REDIRECT_read_option_value('links',0);
-                        P404REDIRECT_save_option_value('links', $links + 1);
-                        P404REDIRECT_add_redirected_link(P404REDIRECT_get_current_URL());
+			$links = P404REDIRECT_read_option_value('links',0);
+			P404REDIRECT_save_option_value('links', $links + 1);
+			P404REDIRECT_add_redirected_link(P404REDIRECT_get_current_URL());
 		 	header ('HTTP/1.1 301 Moved Permanently');
 			header ("Location: " . $options['p404_redirect_to']);
 			exit(); 
@@ -118,19 +125,125 @@ function p404_options_menu() {
 		
 	include "option_page.php";
 }
-//---------------------------------------------------------------
-
-function p404_install(){
-
-}
-
-
-//---------------------------------------------------------------
-
-function p404_uninstall(){
-	//delete_option(OPTIONS404);
-}
 
 //---------------------------------------------------------------
 $path = plugin_basename( __FILE__ );
 add_action("after_plugin_row_{$path}", 'P404REDIRECT_after_plugin_row', 10, 3);
+
+
+
+
+add_action( 'admin_enqueue_scripts', 'p404_include_js' );
+
+function p404_include_js()
+{
+
+	$mypage = isset($_GET['page']) ? $_GET['page'] : '';
+	
+    if ($mypage == 'all-404-redirect-to-homepage.php') {
+        if (!did_action('wp_enqueue_media')) {
+            wp_enqueue_media();
+        }
+		
+		
+        wp_enqueue_script('myuploadscript', plugin_dir_url(__FILE__) . '/js/custom.js', array('jquery'));
+    }
+}
+
+
+
+function p404_modify_htaccess()
+{
+    $options= P404REDIRECT_get_my_options();
+    if(isset($options['img_p404_status']) && $options['img_p404_status'] == 1) {
+        $image_id = isset($options['image_id_p404_redirect_to']) ? absint($options['image_id_p404_redirect_to']) : '';
+        if ($image_id != '') {
+            $image = wp_get_attachment_image_src($image_id);
+            $image = $image[0];
+
+            $ruls[] = <<<EOT
+RewriteOptions inherit
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
+RewriteRule \.(gif|jpe?g|png|bmp) $image [NC,L]
+</IfModule>
+
+EOT;
+//NC (no case, case insensitive, useless in this context) and L (last rule if applied)
+            return p404_add_htaccess($ruls);
+        }
+    }
+}
+
+
+//echo WP_CONTENT_DIR;echo"<br>";
+//echo ABSPATH;exit;
+function p404_add_htaccess($insertion) {
+    //Clear the old htaccess file located inside the main website directory
+    $htaccess_file = WP_CONTENT_DIR.'/.htaccess';
+    $filename = $htaccess_file;
+    if (!file_exists($filename)) {
+        touch($filename);
+    }
+    if (is_writable($filename)) {
+        return array('status'=>true,'massage'=>p404_insert_with_markers_htaccess($htaccess_file, 'All_404_marker_comment_image', (array) $insertion));
+    }else{
+        return array('status'=>false,'massage'=>$insertion);
+    }
+}
+
+function p404_clear_htaccess()
+{
+    $htaccess_file = WP_CONTENT_DIR.'/.htaccess';
+
+    p404_insert_with_markers_htaccess($htaccess_file, 'All_404_marker_comment_image', "");
+}
+
+function p404_insert_with_markers_htaccess( $filename, $marker, $insertion ) {
+    if (!file_exists( $filename ) || is_writeable( $filename ) ) {
+        if (!file_exists( $filename ) ) {
+            $markerdata = '';
+        } else {
+            $markerdata = explode( "\n", implode( '', file( $filename ) ) );
+        }
+
+        if ( !$f = @fopen( $filename, 'w' ) )
+            return false;
+
+        $foundit = false;
+        if ( $markerdata ) {
+            $state = true;
+            foreach ( $markerdata as $n => $markerline ) {
+                if (strpos($markerline, '# BEGIN ' . $marker) !== false)
+                    $state = false;
+                if ( $state ) {
+                    if ( $n + 1 < count( $markerdata ) )
+                        fwrite( $f, "{$markerline}\n" );
+                    else
+                        fwrite( $f, "{$markerline}" );
+                }
+                if (strpos($markerline, '# END ' . $marker) !== false) {
+                    fwrite( $f, "# BEGIN {$marker}\n" );
+                    if ( is_array( $insertion ))
+                        foreach ( $insertion as $insertline )
+                            fwrite( $f, "{$insertline}\n" );
+                    fwrite( $f, "# END {$marker}\n" );
+                    $state = true;
+                    $foundit = true;
+                }
+            }
+        }
+        if (!$foundit) {
+            fwrite( $f, "\n# BEGIN {$marker}\n" );
+            if ( is_array( $insertion ))
+                foreach ( $insertion as $insertline )
+                    fwrite( $f, "{$insertline}\n" );
+            fwrite( $f, "# END {$marker}\n" );
+        }
+        fclose( $f );
+        return true;
+    } else {
+        return false;
+    }
+}

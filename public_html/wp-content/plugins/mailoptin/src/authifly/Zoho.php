@@ -58,9 +58,9 @@ class Zoho extends OAuth2
 
         $client_secret = $this->clientSecret;
 
-//        if (isset($_GET['location']) && $_GET['location'] != 'us') {
-//            $client_secret = $this->config->filter('keys')->get($_GET['location'] . '_secret');
-//        }
+        //if (isset($_GET['location']) && $_GET['location'] != 'us') {
+        //    $client_secret = $this->config->filter('keys')->get($_GET['location'] . '_secret');
+        //}
 
         $this->tokenRefreshParameters = [
             'grant_type'    => 'refresh_token',
@@ -108,9 +108,9 @@ class Zoho extends OAuth2
         $this->accessTokenUrl                  = $_GET['accounts-server'] . '/oauth/v2/token';
         $this->tokenExchangeParameters['code'] = $code;
 
-//        if (isset($_GET['location']) && $_GET['location'] != 'us') {
-//            $this->tokenExchangeParameters['client_secret'] = $this->config->filter('keys')->get($_GET['location'] . '_secret');
-//        }
+        //if (isset($_GET['location']) && $_GET['location'] != 'us') {
+        //    $this->tokenExchangeParameters['client_secret'] = $this->config->filter('keys')->get($_GET['location'] . '_secret');
+        //}
 
         $response = $this->httpClient->request(
             $this->accessTokenUrl,
@@ -150,7 +150,6 @@ class Zoho extends OAuth2
         }
 
         // calculate when the access token expire
-
         // for zoho, expires_in is in milliseconds. Instead we use expires_in_sec
         if ($collection->exists('expires_in_sec')) {
             $expires_at = time() + (int)$collection->get('expires_in_sec');
@@ -179,6 +178,47 @@ class Zoho extends OAuth2
         $this->initialize();
 
         return $collection;
+    }
+
+    public function refreshAccessToken($parameters = [])
+    {
+        $accessTokenUrl = $this->accessTokenUrl;
+
+        if (isset($_GET['location'])) {
+
+            /** @see https://www.zoho.com/crm/developer/docs/api/v2/refresh.html */
+            switch ($_GET['location']) {
+                case 'eu':
+                    $accessTokenUrl = 'https://accounts.zoho.eu/oauth/v2/token';
+                    break;
+                case 'au':
+                    $accessTokenUrl = 'https://accounts.zoho.com.au/oauth/v2/token';
+                    break;
+                case 'in':
+                    $accessTokenUrl = 'https://accounts.zoho.in/oauth/v2/token';
+                    break;
+                case 'cn':
+                    $accessTokenUrl = 'https://accounts.zoho.com.cn/oauth/v2/token';
+                    break;
+            }
+        }
+
+        $this->tokenRefreshParameters = ! empty($parameters)
+            ? $parameters
+            : $this->tokenRefreshParameters;
+
+        $response = $this->httpClient->request(
+            $accessTokenUrl,
+            $this->tokenRefreshMethod,
+            $this->tokenRefreshParameters,
+            $this->tokenRefreshHeaders
+        );
+
+        $this->validateApiResponse('Unable to refresh the access token');
+
+        $this->validateRefreshAccessToken($response);
+
+        return $response;
     }
 
     public function getAccessToken()

@@ -4,9 +4,10 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31
+class ComposerStaticInit8956e9e8153e201bc56dfec807ca66d0
 {
     public static $files = array (
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '9e4824c5afbdc1482b6025ce3d4dfde8' => __DIR__ . '/..' . '/league/csv/src/functions_include.php',
         '784368192bb2be2d6178826e1a6f0ee9' => __DIR__ . '/../..' . '/src/authifly/OAuthCredentialStorage.php',
@@ -24,11 +25,13 @@ class ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31
         '1d70241e5fa15180bf0b547b18160633' => __DIR__ . '/../..' . '/src/core/src/Functions/custom-settings-api.php',
         '541054f7d83801e360f0f9cfeb6e7da9' => __DIR__ . '/../..' . '/src/core/src/Functions/functions.php',
         '1064428a5c96d5b26937d911d5bd0e95' => __DIR__ . '/../..' . '/src/core/src/Functions/php-html-css-js-minifier.php',
+        'e180ca08fee0de2c7165b35361a1b492' => __DIR__ . '/../..' . '/src/core/src/Functions/MoBFnote.php',
     );
 
     public static $prefixLengthsPsr4 = array (
         'S' => 
         array (
+            'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Contracts\\Translation\\' => 30,
             'Symfony\\Component\\Translation\\' => 30,
@@ -45,6 +48,8 @@ class ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31
             'MailOptin\\ZohoCampaignsConnect\\' => 31,
             'MailOptin\\ZohoCRMConnect\\' => 25,
             'MailOptin\\WordPressUserRegistrationConnect\\' => 43,
+            'MailOptin\\WooCommerceConnect\\' => 29,
+            'MailOptin\\WebHookConnect\\' => 25,
             'MailOptin\\WeMailConnect\\' => 24,
             'MailOptin\\WPMLConnect\\' => 22,
             'MailOptin\\WPFormsConnect\\' => 25,
@@ -108,6 +113,10 @@ class ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31
         array (
             'Composer\\Installers\\' => 20,
         ),
+        'B' => 
+        array (
+            'Barryvdh\\Composer\\' => 18,
+        ),
         'A' => 
         array (
             'Authifly\\' => 9,
@@ -115,6 +124,10 @@ class ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31
     );
 
     public static $prefixDirsPsr4 = array (
+        'Symfony\\Polyfill\\Php80\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
+        ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
@@ -137,11 +150,11 @@ class ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31
         ),
         'Mailchimp\\http\\' => 
         array (
-            0 => __DIR__ . '/..' . '/thinkshout/mailchimp-api-php/src/http',
+            0 => __DIR__ . '/..' . '/mailoptin/mailchimp-api-php/src/http',
         ),
         'Mailchimp\\' => 
         array (
-            0 => __DIR__ . '/..' . '/thinkshout/mailchimp-api-php/src',
+            0 => __DIR__ . '/..' . '/mailoptin/mailchimp-api-php/src',
         ),
         'MailOptin\\ZohoCampaignsConnect\\' => 
         array (
@@ -154,6 +167,14 @@ class ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31
         'MailOptin\\WordPressUserRegistrationConnect\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/connections/WordPressUserRegistrationConnect',
+        ),
+        'MailOptin\\WooCommerceConnect\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/connections/WooCommerceConnect',
+        ),
+        'MailOptin\\WebHookConnect\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/connections/WebHookConnect',
         ),
         'MailOptin\\WeMailConnect\\' => 
         array (
@@ -355,6 +376,10 @@ class ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31
         array (
             0 => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers',
         ),
+        'Barryvdh\\Composer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/barryvdh/composer-cleanup-plugin/src',
+        ),
         'Authifly\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/authifly/src',
@@ -397,6 +422,7 @@ class ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31
         'AC_User' => __DIR__ . '/../..' . '/src/connections/ActiveCampaignConnect/APIClass/includes/User.class.php',
         'AC_Webhook' => __DIR__ . '/../..' . '/src/connections/ActiveCampaignConnect/APIClass/includes/Webhook.class.php',
         'ActiveCampaign' => __DIR__ . '/../..' . '/src/connections/ActiveCampaignConnect/APIClass/includes/ActiveCampaign.class.php',
+        'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Authifly\\Adapter\\AbstractAdapter' => __DIR__ . '/../..' . '/src/authifly/src/Adapter/AbstractAdapter.php',
         'Authifly\\Adapter\\AdapterInterface' => __DIR__ . '/../..' . '/src/authifly/src/Adapter/AdapterInterface.php',
         'Authifly\\Adapter\\DataStoreTrait' => __DIR__ . '/../..' . '/src/authifly/src/Adapter/DataStoreTrait.php',
@@ -437,6 +463,8 @@ class ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31
         'Authifly\\Thirdparty\\OAuth\\OAuthSignatureMethod' => __DIR__ . '/../..' . '/src/authifly/src/Thirdparty/OAuth/OAuthSignatureMethod.php',
         'Authifly\\Thirdparty\\OAuth\\OAuthSignatureMethodHMACSHA1' => __DIR__ . '/../..' . '/src/authifly/src/Thirdparty/OAuth/OAuthSignatureMethodHMACSHA1.php',
         'Authifly\\Thirdparty\\OAuth\\OAuthUtil' => __DIR__ . '/../..' . '/src/authifly/src/Thirdparty/OAuth/OAuthUtil.php',
+        'Barryvdh\\Composer\\CleanupPlugin' => __DIR__ . '/..' . '/barryvdh/composer-cleanup-plugin/src/CleanupPlugin.php',
+        'Barryvdh\\Composer\\CleanupRules' => __DIR__ . '/..' . '/barryvdh/composer-cleanup-plugin/src/CleanupRules.php',
         'Carbon\\Carbon' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Carbon.php',
         'Carbon\\CarbonInterval' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonInterval.php',
         'Carbon\\CarbonPeriod' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonPeriod.php',
@@ -506,6 +534,7 @@ class ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31
         'Composer\\Installers\\OsclassInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/OsclassInstaller.php',
         'Composer\\Installers\\OxidInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/OxidInstaller.php',
         'Composer\\Installers\\PPIInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/PPIInstaller.php',
+        'Composer\\Installers\\PantheonInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/PantheonInstaller.php',
         'Composer\\Installers\\PhiftyInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/PhiftyInstaller.php',
         'Composer\\Installers\\PhpBBInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/PhpBBInstaller.php',
         'Composer\\Installers\\PimcoreInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/PimcoreInstaller.php',
@@ -549,6 +578,7 @@ class ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31
         'DrewM\\Drip\\Batch' => __DIR__ . '/..' . '/drewm/drip/src/Batch.php',
         'DrewM\\Drip\\Dataset' => __DIR__ . '/..' . '/drewm/drip/src/Dataset.php',
         'DrewM\\Drip\\Drip' => __DIR__ . '/..' . '/drewm/drip/src/Drip.php',
+        'DrewM\\Drip\\DripException' => __DIR__ . '/..' . '/drewm/drip/src/DripException.php',
         'DrewM\\Drip\\Response' => __DIR__ . '/..' . '/drewm/drip/src/Response.php',
         'Html2Text\\Html2Text' => __DIR__ . '/..' . '/soundasleep/html2text/src/Html2Text.php',
         'Html2Text\\Html2TextException' => __DIR__ . '/..' . '/soundasleep/html2text/src/Html2TextException.php',
@@ -911,6 +941,7 @@ class ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31
         'MailOptin\\NinjaFormsConnect\\Integrations\\SendyConnect' => __DIR__ . '/../..' . '/src/connections/NinjaFormsConnect/Integrations/SendyConnect.php',
         'MailOptin\\NinjaFormsConnect\\Integrations\\VerticalResponseConnect' => __DIR__ . '/../..' . '/src/connections/NinjaFormsConnect/Integrations/VerticalResponseConnect.php',
         'MailOptin\\NinjaFormsConnect\\Integrations\\WeMailConnect' => __DIR__ . '/../..' . '/src/connections/NinjaFormsConnect/Integrations/WeMailConnect.php',
+        'MailOptin\\NinjaFormsConnect\\Integrations\\WebHookConnect' => __DIR__ . '/../..' . '/src/connections/NinjaFormsConnect/Integrations/WebHookConnect.php',
         'MailOptin\\NinjaFormsConnect\\Integrations\\WordPressUserRegistrationConnect' => __DIR__ . '/../..' . '/src/connections/NinjaFormsConnect/Integrations/WordPressUserRegistrationConnect.php',
         'MailOptin\\NinjaFormsConnect\\Integrations\\ZohoCRMConnect' => __DIR__ . '/../..' . '/src/connections/NinjaFormsConnect/Integrations/ZohoCRMConnect.php',
         'MailOptin\\NinjaFormsConnect\\Integrations\\ZohoCampaignsConnect' => __DIR__ . '/../..' . '/src/connections/NinjaFormsConnect/Integrations/ZohoCampaignsConnect.php',
@@ -961,6 +992,14 @@ class ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31
         'MailOptin\\WeMailConnect\\Connect' => __DIR__ . '/../..' . '/src/connections/WeMailConnect/Connect.php',
         'MailOptin\\WeMailConnect\\ConnectSettingsPage' => __DIR__ . '/../..' . '/src/connections/WeMailConnect/ConnectSettingsPage.php',
         'MailOptin\\WeMailConnect\\Subscription' => __DIR__ . '/../..' . '/src/connections/WeMailConnect/Subscription.php',
+        'MailOptin\\WebHookConnect\\Connect' => __DIR__ . '/../..' . '/src/connections/WebHookConnect/Connect.php',
+        'MailOptin\\WebHookConnect\\SendWebhookRequest' => __DIR__ . '/../..' . '/src/connections/WebHookConnect/SendWebhookRequest.php',
+        'MailOptin\\WooCommerceConnect\\Category' => __DIR__ . '/../..' . '/src/connections/WooCommerceConnect/Category.php',
+        'MailOptin\\WooCommerceConnect\\Connect' => __DIR__ . '/../..' . '/src/connections/WooCommerceConnect/Connect.php',
+        'MailOptin\\WooCommerceConnect\\Product' => __DIR__ . '/../..' . '/src/connections/WooCommerceConnect/Product.php',
+        'MailOptin\\WooCommerceConnect\\Tags' => __DIR__ . '/../..' . '/src/connections/WooCommerceConnect/Tags.php',
+        'MailOptin\\WooCommerceConnect\\WooInit' => __DIR__ . '/../..' . '/src/connections/WooCommerceConnect/WooInit.php',
+        'MailOptin\\WooCommerceConnect\\WooSettings' => __DIR__ . '/../..' . '/src/connections/WooCommerceConnect/WooSettings.php',
         'MailOptin\\WordPressUserRegistrationConnect\\Connect' => __DIR__ . '/../..' . '/src/connections/WordPressUserRegistrationConnect/Connect.php',
         'MailOptin\\WordPressUserRegistrationConnect\\Subscription' => __DIR__ . '/../..' . '/src/connections/WordPressUserRegistrationConnect/Subscription.php',
         'MailOptin\\ZohoCRMConnect\\AbstractZohoCRMConnect' => __DIR__ . '/../..' . '/src/connections/ZohoCRMConnect/AbstractZohoCRMConnect.php',
@@ -972,18 +1011,18 @@ class ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31
         'MailOptin\\ZohoCampaignsConnect\\ConnectSettingsPage' => __DIR__ . '/../..' . '/src/connections/ZohoCampaignsConnect/ConnectSettingsPage.php',
         'MailOptin\\ZohoCampaignsConnect\\SendCampaign' => __DIR__ . '/../..' . '/src/connections/ZohoCampaignsConnect/SendCampaign.php',
         'MailOptin\\ZohoCampaignsConnect\\Subscription' => __DIR__ . '/../..' . '/src/connections/ZohoCampaignsConnect/Subscription.php',
-        'Mailchimp\\Mailchimp' => __DIR__ . '/..' . '/thinkshout/mailchimp-api-php/src/Mailchimp.php',
-        'Mailchimp\\MailchimpAPIException' => __DIR__ . '/..' . '/thinkshout/mailchimp-api-php/src/MailchimpAPIException.php',
-        'Mailchimp\\MailchimpAutomations' => __DIR__ . '/..' . '/thinkshout/mailchimp-api-php/src/MailchimpAutomations.php',
-        'Mailchimp\\MailchimpCampaigns' => __DIR__ . '/..' . '/thinkshout/mailchimp-api-php/src/MailchimpCampaigns.php',
-        'Mailchimp\\MailchimpConnectedSites' => __DIR__ . '/..' . '/thinkshout/mailchimp-api-php/src/MailchimpConnectedSites.php',
-        'Mailchimp\\MailchimpEcommerce' => __DIR__ . '/..' . '/thinkshout/mailchimp-api-php/src/MailchimpEcommerce.php',
-        'Mailchimp\\MailchimpLists' => __DIR__ . '/..' . '/thinkshout/mailchimp-api-php/src/MailchimpLists.php',
-        'Mailchimp\\MailchimpReports' => __DIR__ . '/..' . '/thinkshout/mailchimp-api-php/src/MailchimpReports.php',
-        'Mailchimp\\MailchimpTemplates' => __DIR__ . '/..' . '/thinkshout/mailchimp-api-php/src/MailchimpTemplates.php',
-        'Mailchimp\\http\\MailchimpCurlHttpClient' => __DIR__ . '/..' . '/thinkshout/mailchimp-api-php/src/http/MailchimpCurlHttpClient.php',
-        'Mailchimp\\http\\MailchimpGuzzleHttpClient' => __DIR__ . '/..' . '/thinkshout/mailchimp-api-php/src/http/MailchimpGuzzleHttpClient.php',
-        'Mailchimp\\http\\MailchimpHttpClientInterface' => __DIR__ . '/..' . '/thinkshout/mailchimp-api-php/src/http/MailchimpHttpClientInterface.php',
+        'Mailchimp\\Mailchimp' => __DIR__ . '/..' . '/mailoptin/mailchimp-api-php/src/Mailchimp.php',
+        'Mailchimp\\MailchimpAPIException' => __DIR__ . '/..' . '/mailoptin/mailchimp-api-php/src/MailchimpAPIException.php',
+        'Mailchimp\\MailchimpAutomations' => __DIR__ . '/..' . '/mailoptin/mailchimp-api-php/src/MailchimpAutomations.php',
+        'Mailchimp\\MailchimpCampaigns' => __DIR__ . '/..' . '/mailoptin/mailchimp-api-php/src/MailchimpCampaigns.php',
+        'Mailchimp\\MailchimpConnectedSites' => __DIR__ . '/..' . '/mailoptin/mailchimp-api-php/src/MailchimpConnectedSites.php',
+        'Mailchimp\\MailchimpEcommerce' => __DIR__ . '/..' . '/mailoptin/mailchimp-api-php/src/MailchimpEcommerce.php',
+        'Mailchimp\\MailchimpLists' => __DIR__ . '/..' . '/mailoptin/mailchimp-api-php/src/MailchimpLists.php',
+        'Mailchimp\\MailchimpReports' => __DIR__ . '/..' . '/mailoptin/mailchimp-api-php/src/MailchimpReports.php',
+        'Mailchimp\\MailchimpTemplates' => __DIR__ . '/..' . '/mailoptin/mailchimp-api-php/src/MailchimpTemplates.php',
+        'Mailchimp\\http\\MailchimpCurlHttpClient' => __DIR__ . '/..' . '/mailoptin/mailchimp-api-php/src/http/MailchimpCurlHttpClient.php',
+        'Mailchimp\\http\\MailchimpGuzzleHttpClient' => __DIR__ . '/..' . '/mailoptin/mailchimp-api-php/src/http/MailchimpGuzzleHttpClient.php',
+        'Mailchimp\\http\\MailchimpHttpClientInterface' => __DIR__ . '/..' . '/mailoptin/mailchimp-api-php/src/http/MailchimpHttpClientInterface.php',
         'PAnD' => __DIR__ . '/..' . '/collizo4sky/persist-admin-notices-dismissal/persist-admin-notices-dismissal.php',
         'Pelago\\Emogrifier' => __DIR__ . '/..' . '/pelago/emogrifier/src/Emogrifier.php',
         'Pelago\\Emogrifier\\CssInliner' => __DIR__ . '/..' . '/pelago/emogrifier/src/Emogrifier/CssInliner.php',
@@ -993,7 +1032,9 @@ class ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31
         'Pelago\\Emogrifier\\HtmlProcessor\\HtmlPruner' => __DIR__ . '/..' . '/pelago/emogrifier/src/Emogrifier/HtmlProcessor/HtmlPruner.php',
         'Pelago\\Emogrifier\\Utilities\\ArrayIntersector' => __DIR__ . '/..' . '/pelago/emogrifier/src/Emogrifier/Utilities/ArrayIntersector.php',
         'Pelago\\Emogrifier\\Utilities\\CssConcatenator' => __DIR__ . '/..' . '/pelago/emogrifier/src/Emogrifier/Utilities/CssConcatenator.php',
+        'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
         'RequestException' => __DIR__ . '/../..' . '/src/connections/ActiveCampaignConnect/APIClass/includes/exceptions/RequestException.php',
+        'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'Symfony\\Component\\CssSelector\\CssSelectorConverter' => __DIR__ . '/..' . '/symfony/css-selector/CssSelectorConverter.php',
         'Symfony\\Component\\CssSelector\\Exception\\ExceptionInterface' => __DIR__ . '/..' . '/symfony/css-selector/Exception/ExceptionInterface.php',
         'Symfony\\Component\\CssSelector\\Exception\\ExpressionErrorException' => __DIR__ . '/..' . '/symfony/css-selector/Exception/ExpressionErrorException.php',
@@ -1118,10 +1159,14 @@ class ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31
         'Symfony\\Contracts\\Translation\\TranslatorInterface' => __DIR__ . '/..' . '/symfony/translation-contracts/TranslatorInterface.php',
         'Symfony\\Contracts\\Translation\\TranslatorTrait' => __DIR__ . '/..' . '/symfony/translation-contracts/TranslatorTrait.php',
         'Symfony\\Polyfill\\Mbstring\\Mbstring' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/Mbstring.php',
+        'Symfony\\Polyfill\\Php80\\Php80' => __DIR__ . '/..' . '/symfony/polyfill-php80/Php80.php',
+        'Symfony\\Polyfill\\Php80\\PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/PhpToken.php',
+        'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
         'UpdateHelper\\ComposerPlugin' => __DIR__ . '/..' . '/kylekatarnls/update-helper/src/UpdateHelper/ComposerPlugin.php',
         'UpdateHelper\\NotUpdateInterfaceInstanceException' => __DIR__ . '/..' . '/kylekatarnls/update-helper/src/UpdateHelper/NotUpdateInterfaceInstanceException.php',
         'UpdateHelper\\UpdateHelper' => __DIR__ . '/..' . '/kylekatarnls/update-helper/src/UpdateHelper/UpdateHelper.php',
         'UpdateHelper\\UpdateHelperInterface' => __DIR__ . '/..' . '/kylekatarnls/update-helper/src/UpdateHelper/UpdateHelperInterface.php',
+        'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
         'WP_Async_Request' => __DIR__ . '/..' . '/deliciousbrains/wp-background-processing/classes/wp-async-request.php',
         'WP_Background_Process' => __DIR__ . '/..' . '/deliciousbrains/wp-background-processing/classes/wp-background-process.php',
     );
@@ -1129,11 +1174,11 @@ class ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31::$fallbackDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit92159f97e17a0d1569d64ca2ef503d31::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit8956e9e8153e201bc56dfec807ca66d0::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit8956e9e8153e201bc56dfec807ca66d0::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInit8956e9e8153e201bc56dfec807ca66d0::$fallbackDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit8956e9e8153e201bc56dfec807ca66d0::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit8956e9e8153e201bc56dfec807ca66d0::$classMap;
 
         }, null, ClassLoader::class);
     }

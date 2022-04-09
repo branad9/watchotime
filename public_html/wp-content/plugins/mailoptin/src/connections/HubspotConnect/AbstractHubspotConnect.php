@@ -63,7 +63,7 @@ class AbstractHubspotConnect extends AbstractConnect
                 $old_data    = get_option($option_name, []);
 
                 $expires_at = $this->oauth_expires_at_transform($result['data']['expires_at']);
-                $new_data  = [
+                $new_data   = [
                     'hubspot_access_token'  => $result['data']['access_token'],
                     'hubspot_refresh_token' => $result['data']['refresh_token'],
                     'hubspot_expires_at'    => $expires_at

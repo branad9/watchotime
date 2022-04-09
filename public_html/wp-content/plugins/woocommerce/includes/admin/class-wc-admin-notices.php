@@ -51,7 +51,14 @@ class WC_Admin_Notices {
 		add_action( 'switch_theme', array( __CLASS__, 'reset_admin_notices' ) );
 		add_action( 'woocommerce_installed', array( __CLASS__, 'reset_admin_notices' ) );
 		add_action( 'wp_loaded', array( __CLASS__, 'add_redirect_download_method_notice' ) );
-		add_action( 'wp_loaded', array( __CLASS__, 'hide_notices' ) );
+		add_action( 'admin_init', array( __CLASS__, 'hide_notices' ), 20 );
+		add_action(
+			'admin_init',
+			function() {
+				self::maybe_remove_php72_required_notice();
+			},
+			20
+		);
 		// @TODO: This prevents Action Scheduler async jobs from storing empty list of notices during WC installation.
 		// That could lead to OBW not starting and 'Run setup wizard' notice not appearing in WP admin, which we want
 		// to avoid.
@@ -67,44 +74,12 @@ class WC_Admin_Notices {
 	/**
 	 * Parses query to create nonces when available.
 	 *
+	 * @deprecated 5.4.0
 	 * @param object $response The WP_REST_Response we're working with.
 	 * @return object $response The prepared WP_REST_Response object.
 	 */
 	public static function prepare_note_with_nonce( $response ) {
-		if ( 'wc-update-db-reminder' !== $response->data['name'] || ! isset( $response->data['actions'] ) ) {
-			return $response;
-		}
-
-		foreach ( $response->data['actions'] as $action_key => $action ) {
-			$url_parts = ! empty( $action->query ) ? wp_parse_url( $action->query ) : '';
-
-			if ( ! isset( $url_parts['query'] ) ) {
-				continue;
-			}
-
-			wp_parse_str( $url_parts['query'], $params );
-
-			if ( array_key_exists( '_nonce_action', $params ) && array_key_exists( '_nonce_name', $params ) ) {
-				$org_params = $params;
-
-				// Check to make sure we're acting on the whitelisted nonce actions.
-				if ( 'wc_db_update' !== $params['_nonce_action'] && 'woocommerce_hide_notices_nonce' !== $params['_nonce_action'] ) {
-					continue;
-				}
-
-				unset( $org_params['_nonce_action'] );
-				unset( $org_params['_nonce_name'] );
-
-				$url = $url_parts['scheme'] . '://' . $url_parts['host'] . $url_parts['path'];
-
-				$nonce         = array( $params['_nonce_name'] => wp_create_nonce( $params['_nonce_action'] ) );
-				$merged_params = array_merge( $nonce, $org_params );
-				$parsed_query  = add_query_arg( $merged_params, $url );
-
-				$response->data['actions'][ $action_key ]->query = $parsed_query;
-				$response->data['actions'][ $action_key ]->url   = $parsed_query;
-			}
-		}
+		wc_deprecated_function( __CLASS__ . '::' . __FUNCTION__, '5.4.0' );
 
 		return $response;
 	}
@@ -145,6 +120,41 @@ class WC_Admin_Notices {
 		self::add_notice( 'template_files' );
 		self::add_min_version_notice();
 		self::add_maxmind_missing_license_key_notice();
+		self::maybe_add_php72_required_notice();
+	}
+
+	/**
+	 * Add an admin notice about the bump of the required PHP version in WooCommerce 6.5
+	 * if the current PHP version is too old.
+	 *
+	 * TODO: Remove this method in WooCommerce 6.5.
+	 */
+	private static function maybe_add_php72_required_notice() {
+		if ( version_compare( phpversion(), '7.2', '>=' ) ) {
+			return;
+		}
+
+		self::add_custom_notice(
+			'php72_required_in_woo_65',
+			__( '<h4>PHP version requirements will change soon</h4><p>WooCommerce 6.5, scheduled for <b>May 2022</b>, will require PHP 7.2 or newer to work. Your server is currently running an older version of PHP, so this change will impact your store. Upgrading to at least PHP 7.4 is recommended. <b><a href="https://developer.woocommerce.com/2022/01/05/new-requirement-for-woocommerce-6-5-php-7-2/">Learn more about this change.</a></b></p>', 'woocommerce' )
+		);
+
+		$wp_version_is_ok = version_compare( get_bloginfo( 'version' ), WC_NOTICE_MIN_WP_VERSION, '>=' );
+		if ( $wp_version_is_ok ) {
+			self::hide_notice( WC_PHP_MIN_REQUIREMENTS_NOTICE );
+		}
+	}
+
+	/**
+	 * Remove the admin notice about the bump of the required PHP version in WooCommerce 6.5
+	 * if the current PHP version is good.
+	 *
+	 * TODO: Remove this method in WooCommerce 6.5.
+	 */
+	private static function maybe_remove_php72_required_notice() {
+		if ( version_compare( phpversion(), '7.2', '>=' ) && self::has_notice( 'php72_required_in_woo_65' ) ) {
+			self::remove_notice( 'php72_required_in_woo_65' );
+		}
 	}
 
 	/**
@@ -204,12 +214,21 @@ class WC_Admin_Notices {
 
 			$hide_notice = sanitize_text_field( wp_unslash( $_GET['wc-hide-notice'] ) ); // WPCS: input var ok, CSRF ok.
 
-			self::remove_notice( $hide_notice );
-
-			update_user_meta( get_current_user_id(), 'dismissed_' . $hide_notice . '_notice', true );
-
-			do_action( 'woocommerce_hide_' . $hide_notice . '_notice' );
+			self::hide_notice( $hide_notice );
 		}
+	}
+
+	/**
+	 * Hide a single notice.
+	 *
+	 * @param $name Notice name.
+	 */
+	private static function hide_notice( $name ) {
+		self::remove_notice( $name );
+
+		update_user_meta( get_current_user_id(), 'dismissed_' . $name . '_notice', true );
+
+		do_action( 'woocommerce_hide_' . $name . '_notice' );
 	}
 
 	/**
@@ -307,7 +326,7 @@ class WC_Admin_Notices {
 	 * @deprecated 4.6.0
 	 */
 	public static function install_notice() {
-		_deprecated_function( __CLASS__ . '::' . __FUNCTION__, '4.6.0', __( 'Onboarding is maintained in WooCommerce Admin.', 'woocommerce' ) );
+		_deprecated_function( __CLASS__ . '::' . __FUNCTION__, '4.6.0', esc_html__( 'Onboarding is maintained in WooCommerce Admin.', 'woocommerce' ) );
 	}
 
 	/**

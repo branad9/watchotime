@@ -2,14 +2,64 @@
 
 namespace MailOptin\MoosendConnect;
 
+use MailOptin\Core\Admin\Customizer\CustomControls\WP_Customize_Chosen_Single_Select_Control;
+use MailOptin\Core\Admin\Customizer\EmailCampaign\Customizer;
 use MailOptin\Core\Connections\AbstractConnect;
+use MailOptin\Core\Repositories\EmailCampaignRepository;
 
 class ConnectSettingsPage
 {
     public function __construct()
     {
         add_filter('mailoptin_connections_settings_page', array($this, 'connection_settings'));
+    
+        add_filter('mailoptin_email_campaign_customizer_page_settings', array($this, 'campaign_customizer_settings'));
+        add_filter('mailoptin_email_campaign_customizer_settings_controls', array($this, 'campaign_customizer_controls'), 10, 4);
+        
         add_action('wp_cspa_settings_after_title', array($this, 'output_error_log_link'), 10, 2);
+    }
+    
+    public function campaign_customizer_settings($settings)
+    {
+        $settings['MoosendConnect_segments'] = array(
+            'default'   => apply_filters('mailoptin_customizer_email_campaign_MoosendConnect_segments', ''),
+            'type'      => 'option',
+            'transport' => 'postMessage',
+        );
+        
+        return $settings;
+    }
+    
+    /**
+     * @param $controls
+     * @param $wp_customize
+     * @param $option_prefix
+     * @param Customizer $customizerClassInstance
+     *
+     * @return mixed
+     */
+    public function campaign_customizer_controls($controls, $wp_customize, $option_prefix, $customizerClassInstance)
+    {
+        $list_id =  EmailCampaignRepository::get_merged_customizer_value($customizerClassInstance->email_campaign_id,'connection_email_list');
+        
+        $segments = Connect::get_instance()->get_list_segments($list_id);
+        
+        // always prefix with the name of the connect/connection service.
+        $controls['MoosendConnect_segments'] = new WP_Customize_Chosen_Single_Select_Control(
+            $wp_customize,
+            $option_prefix . '[MoosendConnect_segments]',
+            apply_filters('mailoptin_customizer_settings_campaign_MoosendConnect_segments_args', array(
+                    'label'       => __('Moosend Segments'),
+                    'section'     => $customizerClassInstance->campaign_settings_section_id,
+                    'settings'    => $option_prefix . '[MoosendConnect_segments]',
+                    'description' => __('Select a segment to send to. Leave empty to send to all list subscribers.', 'mailoptin'),
+                    'choices'     => $segments,
+                    'priority'    => 199
+                )
+            )
+        );
+        
+        return $controls;
     }
 
     public function connection_settings($arg)

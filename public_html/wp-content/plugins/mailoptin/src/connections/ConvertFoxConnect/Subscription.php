@@ -120,7 +120,7 @@ class Subscription extends AbstractConvertFoxConnect
                 $lead_data['custom_properties'] = $custom_fields_bucket;
             }
 
-            $lead_data = array_filter($lead_data, [$this, 'data_filter']);
+            $lead_data = apply_filters('mo_connections_gist_optin_payload', array_filter($lead_data, [$this, 'data_filter']), $this);
 
             $response = $this->convertfox_instance()->make_request('leads', $lead_data, 'post');
 

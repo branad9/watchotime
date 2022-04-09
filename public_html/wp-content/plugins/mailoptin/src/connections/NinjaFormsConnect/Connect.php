@@ -41,6 +41,9 @@ class Connect
     {
         $connections = ConnectionsRepository::get_connections();
 
+        //escape webhook connection
+        unset($connections['WebHookConnect']);
+
         if (is_array($connections) && ! empty($connections)) {
 
             foreach ($connections as $key => $label) {

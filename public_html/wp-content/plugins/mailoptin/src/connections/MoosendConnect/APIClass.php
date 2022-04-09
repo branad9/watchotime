@@ -81,7 +81,8 @@ class APIClass
         $response = $this->make_request('lists/1/1000');
 
         /**
-         * 
+         *
+         *
          * A list with mailing lists containing the following information for each list:
          * ID : The id of the mailing list.
          * Name : The name of the mailing list.
@@ -99,6 +100,25 @@ class APIClass
          */
         return $response->Context->MailingLists;
     }
+    
+    public function get_segments_groups($list_id) {
+        $response = $this->make_request( "lists/$list_id/segments" );
+        $segments   = $response->Context->Segments;
+        
+        /**
+         * This will be blank if there are no segments for this mailing list.
+         *
+         * A list with the following information for each segment for the given mailing list:
+         * ID: The ID of the segment.
+         * Name: The name of the segment.
+         * MatchType: Specifies how the segment's criteria will match together. This can be one of the following values :
+         * 0: For All. Only subscribers that match all given criteria will be returned by the segment.
+         * 1: For Any. Subscribers that match any of the given criteria will be returned by the segment.
+         *
+         */
+        
+        return $segments;
+    }
 
     /**
      * @return array
@@ -111,7 +131,7 @@ class APIClass
 
         /**
          * This will be blank if there are no custom fields for this mailing list.
-         * 
+         *
          * ID : The id of the custom field
          * Name : The name of the custom field
          * Context : The context of the custom field. Will be null if not singleSelectDropDown.
@@ -127,8 +147,8 @@ class APIClass
      *      Name : The name of the member. (Optional)
      *      Email : The email address of the member. (Required)
      *      HasExternalDoubleOptIn: When true, flags the added member as having given their subscription consent by other means. (Optional)
-     *      CustomFields : A list of name=value pairs that match the member's custom fields defined in the mailing list. (Optional) 
-     * 
+     *      CustomFields : A list of name=value pairs that match the member's custom fields defined in the mailing list. (Optional)
+     *
      * @return array
      * @throws \Exception
      */
@@ -139,21 +159,21 @@ class APIClass
 
     /**
      * @param $args array of:
-     * 
+     *
      * Name : The name of the campaign. (Required)
      * Subject : The subject line of the new campaign. (Required)
      * SenderEmail : The sender email of the campaign. (Required)
      * ReplyToEmail : The email address to which recipients replies will arrive. It must be one of your sender accounts. If not specified, the sender's email will be assumed. (Required)
      * ConfirmationToEmail : The email address to which a confirmation message will be sent when the campaign has been successfully sent. This can be any valid email address. It does not have to be one of your sender signatures. If not specified, the sender's email will be assumed. (Optional)
      * WebLocation : A url to retrieve the html content for the campaign. We'll automatically move all CSS inline. (Optional)
-     * 
+     *
      * @return array
      * @throws \Exception
      */
-    public function create_campaign( $list_id, $args )
+    public function create_campaign( $list_group, $args )
     {
         $args['IsAB']         = 'false';
-        $args['MailingLists'] = [[ 'MailingListID' => $list_id]];
+        $args['MailingLists'] = [$list_group];
         $res = $this->post( "campaigns/create", $args );
         return $res->Context; //Id of the created campaign
 
@@ -161,7 +181,7 @@ class APIClass
 
     /**
      * @param $campaign_id
-     * 
+     *
      * @return array
      * @throws \Exception
      */

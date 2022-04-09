@@ -29,15 +29,13 @@ class CartAddItem extends AbstractCartRoute {
 				'permission_callback' => '__return_true',
 				'args'                => [
 					'id'        => [
-						'description' => __( 'The cart item product or variation ID.', 'woocommerce' ),
-						'type'        => 'integer',
-						'context'     => [ 'view', 'edit' ],
-						'arg_options' => [
-							'sanitize_callback' => 'absint',
-						],
+						'description'       => __( 'The cart item product or variation ID.', 'woocommerce' ),
+						'type'              => 'integer',
+						'context'           => [ 'view', 'edit' ],
+						'sanitize_callback' => 'absint',
 					],
 					'quantity'  => [
-						'description' => __( 'Quantity of this item in the cart.', 'woocommerce' ),
+						'description' => __( 'Quantity of this item to add to the cart.', 'woocommerce' ),
 						'type'        => 'integer',
 						'context'     => [ 'view', 'edit' ],
 						'arg_options' => [
@@ -66,7 +64,8 @@ class CartAddItem extends AbstractCartRoute {
 					],
 				],
 			],
-			'schema' => [ $this->schema, 'get_public_item_schema' ],
+			'schema'      => [ $this->schema, 'get_public_item_schema' ],
+			'allow_batch' => [ 'v1' => true ],
 		];
 	}
 

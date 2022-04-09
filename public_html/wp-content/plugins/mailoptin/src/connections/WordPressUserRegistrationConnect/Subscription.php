@@ -15,7 +15,7 @@ class Subscription extends AbstractConnect
     {
         $this->email  = $email;
         $this->name   = $name;
-        $this->role   = $role;
+        $this->role   = sanitize_text_field($role);
         $this->extras = $extras;
 
         parent::__construct();
@@ -26,6 +26,8 @@ class Subscription extends AbstractConnect
         $name_split = self::get_first_last_names($this->name);
 
         $user_fields = [];
+
+        $password_mapped_flag = true;
 
         $custom_field_mappings = $this->form_custom_field_mappings();
 
@@ -45,17 +47,19 @@ class Subscription extends AbstractConnect
         }
 
         if ( ! isset($user_data['user_pass']) || empty($user_data['user_pass'])) {
+            $password_mapped_flag   = false;
             $user_data['user_pass'] = wp_generate_password(12, false);
         }
 
         $lead_data = [
-            'user_email' => $this->email,
-            'first_name' => $name_split[0],
-            'last_name'  => $name_split[1],
-            'role'       => $this->role == 'administrator' ? '' : $this->role,
+            'user_email' => sanitize_email($this->email),
+            'first_name' => sanitize_textarea_field($name_split[0]),
+            'last_name'  => sanitize_textarea_field($name_split[1]),
         ];
 
-        $lead_data = array_merge($lead_data, $user_data);
+        $lead_data = array_merge($user_data, $lead_data);
+
+        $lead_data['role'] = $this->role == 'administrator' ? '' : $this->role;
 
         $lead_data = apply_filters('mo_connections_wordpress_user_registration_parameters', $lead_data, $this);
 
@@ -88,7 +92,13 @@ class Subscription extends AbstractConnect
             wp_set_current_user($user_id);
         }
 
-        wp_send_new_user_notifications($user_id);
+        if (apply_filters('mo_connections_wordpress_user_registration_admin_email', true, $lead_data, $this)) {
+            wp_send_new_user_notifications($user_id, 'admin');
+        }
+
+        if (apply_filters('mo_connections_wordpress_user_registration_user_email', true, $lead_data, $this) && ! $password_mapped_flag) {
+            wp_send_new_user_notifications($user_id, 'user');
+        }
 
         return parent::ajax_success();
     }

@@ -95,7 +95,7 @@ class Subscription extends AbstractActiveCampaignConnect
                 }
             }
 
-            $contact = array_filter($contact, [$this, 'data_filter']);
+            $contact = apply_filters('mo_connections_activecampaign_optin_payload', array_filter($contact, [$this, 'data_filter']), $this);
 
             $response = $this->activecampaign_instance()->api("contact/sync", $contact);
 

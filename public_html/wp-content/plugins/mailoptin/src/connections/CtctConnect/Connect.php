@@ -22,7 +22,7 @@ class Connect extends AbstractCtctConnect implements ConnectionInterface
 
     public static function features_support()
     {
-        return [  self::OPTIN_CAMPAIGN_SUPPORT, self::EMAIL_CAMPAIGN_SUPPORT ];
+        return [self::OPTIN_CAMPAIGN_SUPPORT, self::EMAIL_CAMPAIGN_SUPPORT];
     }
 
     /**
@@ -59,14 +59,23 @@ class Connect extends AbstractCtctConnect implements ConnectionInterface
     public function get_email_list()
     {
         try {
-            $response = $this->ctctInstance()->getContactList();
 
-            // an array with list id as key and name as value.
-            $lists_array = array();
-            if (is_array($response) && !empty($response)) {
-                foreach ($response as $list) {
-                    $lists_array[$list->id] = $list->name;
+            $lists_array = get_transient('ctct_get_email_list');
+
+            if (empty($lists_array) || false === $lists_array) {
+
+                $response = $this->ctctInstance()->getContactList();
+
+                // an array with list id as key and name as value.
+                $lists_array = array();
+
+                if (is_array($response) && ! empty($response)) {
+                    foreach ($response as $list) {
+                        $lists_array[$list->id] = $list->name;
+                    }
                 }
+
+                set_transient('ctct_get_email_list', $lists_array, HOUR_IN_SECONDS);
             }
 
             return $lists_array;
@@ -74,6 +83,7 @@ class Connect extends AbstractCtctConnect implements ConnectionInterface
 
         } catch (\Exception $e) {
             self::save_optin_error_log($e->getMessage(), 'constantcontact');
+            return [];
         }
     }
 
@@ -89,9 +99,9 @@ class Connect extends AbstractCtctConnect implements ConnectionInterface
      * @param string $content_html
      * @param string $content_text
      *
+     * @return array
      * @throws \Exception
      *
-     * @return array
      */
     public function send_newsletter($email_campaign_id, $campaign_log_id, $subject, $content_html, $content_text)
     {

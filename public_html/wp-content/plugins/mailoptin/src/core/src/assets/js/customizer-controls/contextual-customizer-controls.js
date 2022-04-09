@@ -173,6 +173,14 @@
                         if (typeof api.section('mo_wp_polylang_display_rule_section') !== 'undefined') {
                             api.section('mo_wp_polylang_display_rule_section').active(!is_displayed());
                         }
+
+                        if (typeof api.section('mo_wp_woocommerce_display_rule_section') !== 'undefined') {
+                            api.section('mo_wp_woocommerce_display_rule_section').active(!is_displayed());
+                        }
+
+                        if (typeof api.section('mo_wp_woocommerce_atc_display_rule_section') !== 'undefined') {
+                            api.section('mo_wp_woocommerce_atc_display_rule_section').active(!is_displayed());
+                        }
                     };
 
                     control.active.validate = is_displayed;
@@ -211,6 +219,7 @@
                 };
 
                 api.control('mo_optin_campaign[' + mailoptin_optin_campaign_id + '][inpost_content_locking_style]', linkSettingValueToControlActiveState);
+                api.control('mo_optin_campaign[' + mailoptin_optin_campaign_id + '][inpost_content_locking_selector]', linkSettingValueToControlActiveState);
             });
 
             // contextual display of redirect_url in success panel/section.
@@ -457,6 +466,26 @@
                     // do nothing
                 });
             });
+
+            //add event handler to detect when opening sound is changed and play the sound to allow admin to preview it
+            $('select[data-customize-setting-link*=optin_sound], input[data-customize-setting-link*=optin_custom_sound]').on('change', function (event) {
+                var value = $('select[data-customize-setting-link*=optin_sound]').val();
+                if(value !== 'none' && value !== '') {
+                    var audio_sound_url = value !== 'custom' ? mailoptin_globals.public_sound + value : $('li[id*=optin_custom_sound]').find('input').val();
+                    var audio = new Audio( audio_sound_url);
+                    audio.addEventListener('canplaythrough', function () {
+                        this.play()
+                            .catch(function (reason) {
+                                console.warn('Sound was not able to play when selected. Reason: ' + reason)
+                            });
+                    });
+                    audio.addEventListener('error', function () {
+                        console.error( 'Error occurred when trying to load popup opening sound.' );
+                    });
+                }
+
+                $('li[id*=optin_custom_sound]').toggle(value === 'custom');
+            }).change();
 
             // handle situations when field mapping view is showing and save button is clicked.
             jQuery('#save').on('click', function (e) {

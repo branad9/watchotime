@@ -62,7 +62,7 @@ class ConnectSettingsPage extends AbstractCampaignMonitorConnect
                 }
 
                 // save cache.
-                set_transient('mo_campaign_monitor_clients', $client_ids, HOUR_IN_SECONDS);
+                set_transient('mo_campaign_monitor_clients', $client_ids, 30 * MINUTE_IN_SECONDS);
             }
 
         } catch (\Exception $e) {

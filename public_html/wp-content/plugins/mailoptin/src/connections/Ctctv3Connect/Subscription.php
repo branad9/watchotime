@@ -94,9 +94,25 @@ class Subscription extends AbstractCtctv3Connect
                 }
             }
 
-            $properties = apply_filters('mo_connections_constant_contact_v3_optin_payload', array_filter($properties, [$this, 'data_filter']));
+            $properties = apply_filters('mo_connections_constant_contact_v3_optin_payload', array_filter($properties, [$this, 'data_filter']), $this);
 
             $response = $this->ctctv3Instance()->createOrUpdateContact($properties);
+    
+            $contact_tags = $this->get_integration_tags('Ctctv3Connect_contact_tags');
+
+            if(!empty($contact_tags) && isset($response->contact_id)) {
+                $contact_id = $response->contact_id;
+                
+                // get the contact so one can get the update_source parameter
+                $properties = $this->ctctv3Instance()->getContact($contact_id);
+
+                $properties->taggings = $contact_tags;
+                
+                if(!isset($properties->update_source)) $properties->update_source = $properties->create_source;
+                
+                //update the contact
+                $this->ctctv3Instance()->updateContact($contact_id, $properties);
+            }
 
             if (isset($response->contact_id)) {
                 return parent::ajax_success();

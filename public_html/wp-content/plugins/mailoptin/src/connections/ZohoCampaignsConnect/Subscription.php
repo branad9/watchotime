@@ -92,6 +92,8 @@ class Subscription extends AbstractZohoCampaignsConnect
 
             $payload['contactinfo'] = json_encode(array_filter($payload['contactinfo'], [$this, 'data_filter']));
 
+            $payload = apply_filters('mo_connections_zoho_campaigns_payload', $payload, $this);
+
             $response = $this->zcInstance()->apiRequest('json/listsubscribe?resfmt=JSON', 'POST', $payload);
 
             if (isset($response->status) && $response->status == 'success') {

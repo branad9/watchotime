@@ -119,6 +119,9 @@ class FormidableForm extends FrmFormAction
             $connections['leadbank'] = __('MailOptin Leads', 'mailoptin');
         }
 
+        //escape webhook connection
+        unset($connections['WebHookConnect']);
+
         return $connections;
     }
 

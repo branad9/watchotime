@@ -65,7 +65,7 @@ class Subscription extends AbstractSendlaneConnect
                 }
             }
 
-            $lead_data = array_filter($lead_data, [$this, 'data_filter']);
+            $lead_data = apply_filters('mo_connections_sendlane_optin_payload', array_filter($lead_data, [$this, 'data_filter']), $this);
 
             $response = $this->sendlane_instance()->make_request('list-subscriber-add', $lead_data);
             $response = $response['body'];

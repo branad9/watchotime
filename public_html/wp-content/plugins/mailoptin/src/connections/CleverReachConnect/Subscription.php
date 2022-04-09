@@ -57,7 +57,17 @@ class Subscription extends AbstractCleverReachConnect
             }
 
             $subscription_form = $this->get_integration_data('CleverReachConnect_form');
-
+    
+            //checking is conversion_page is empty, then set defaults to home_url()
+            if(empty($this->extras['conversion_page'])) {
+                $this->extras['conversion_page'] = home_url();
+            }
+    
+            //also checking if the referrer is empty, then set to conversion_page
+            if(empty($this->extras['referrer'])) {
+                $this->extras['referrer'] = $this->extras['conversion_page'];
+            }
+            
             $doi_data = [];
 
             if ( ! empty($subscription_form)) {
@@ -94,7 +104,9 @@ class Subscription extends AbstractCleverReachConnect
                 }
             }
 
-            $response = $this->cleverreachInstance()->addSubscriber($group_id, $this->email, array_filter($subscriber_data, [$this, 'data_filter']), $doi_data);
+            $subscriber_data = apply_filters('mo_connections_cleverreach_optin_payload', array_filter($subscriber_data, [$this, 'data_filter']), $this);
+
+            $response = $this->cleverreachInstance()->addSubscriber($group_id, $this->email, $subscriber_data, $doi_data);
 
             if (isset($response->id) && ! empty($response->id)) {
                 return parent::ajax_success();

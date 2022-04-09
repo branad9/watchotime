@@ -1,25 +1,21 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 function P404REDIRECT_HideMsg()
 	{  
 		add_option( 'P404REDIRECT_upgrade_msg','hidemsg');
+	}
 
-	}  
-	
-
-function P404REDIRECT_after_plugin_row($plugin_file, $plugin_data, $status) {
-	       
+function P404REDIRECT_after_plugin_row($plugin_file, $plugin_data, $status)
+{
 			if(get_option('P404REDIRECT_upgrade_msg') !='hidemsg')
 			{
-			
-				$class_name = $plugin_data['slug'];
-				
+				$class_name = $plugin_data['TextDomain']; // $plugin_data is an array retrived by default when you action this function after_plugin_row
 
-		        echo '<tr id="' .$class_name. '-plugin-update-tr" class="plugin-update-tr active">';
-		        echo '<td  colspan="3" class="plugin-update">';
-		        echo '<div id="' .$class_name. '-upgradeMsg" class="update-message" style="background:#FFF8E5; padding-left:10px; border-left:#FFB900 solid 4px" >';
+		        echo '<tr id="' .esc_attr($class_name). '-plugin-update-tr" class="plugin-update-tr active">';
+		        echo '<td  colspan="6" class="plugin-update">';
+		        echo '<div id="' .esc_attr($class_name). '-upgradeMsg" class="update-message" style="background:#FFF8E5; padding-left:10px; border-left:#FFB900 solid 4px" >';
 
-				echo '<span style="color:red">Have many broken links?</span>.<br />keep track of 404 errors using our powerfull <a target="_blank" href="http://www.clogica.com/product/seo-redirection-premium-wordpress-plugin#404pluginspage">SEO Redirection Plugin</a> to show and fix all broken links & 404 errors that occur on your site. or ';
+				echo '<span style="color:red">Have many broken links?</span>.<br />keep track of 404 errors using our powerfull <a target="_blank" href="https://www.wp-buy.com/product/seo-redirection-premium-wordpress-plugin/">SEO Redirection Plugin</a> to show and fix all broken links & 404 errors that occur on your site. or ';
 				        
 				echo '<span id="HideMe" style="cursor:pointer" ><a href="javascript:void(0)"><strong> Dismiss</strong></a> this message</span>';
 		        echo '</div>';
@@ -27,34 +23,34 @@ function P404REDIRECT_after_plugin_row($plugin_file, $plugin_data, $status) {
 		        echo '</tr>';
 			}
 		        ?>
-		        <script type="text/javascript">
-			    jQuery(document).ready(function() {
-				    var row = jQuery('#<?php echo $class_name;?>-plugin-update-tr').closest('tr').prev();
-				    jQuery(row).addClass('update');
-					
-					jQuery("#HideMe").click(function(){ 
-					  jQuery.ajax({  
-							type: 'POST',  
-							url: '<?php echo admin_url();?>/admin-ajax.php',  
-							data: {  
-								action: 'P404REDIRECT_HideMsg'
-							},  
-							success: function(data, textStatus, XMLHttpRequest){  
-								
-								jQuery("#<?php echo $class_name;?>-upgradeMsg").hide();  
-								  
-							},  
-							error: function(MLHttpRequest, textStatus, errorThrown){  
-								alert(errorThrown);  
-							}  
-						});  
-				  });
-  
-			    });
-			    </script>
-			<?php
-	    }
-		
+			<script type="text/javascript">
+			jQuery(document).ready(function() {
+				var row = jQuery('#<?php echo esc_attr($class_name);?>-plugin-update-tr').closest('tr').prev();
+				jQuery(row).addClass('update');
+				
+				jQuery("#HideMe").click(function(){ 
+				  jQuery.ajax({
+						type: 'POST',  
+						url: '<?php echo admin_url();?>/admin-ajax.php',  
+						data: {  
+							action: 'P404REDIRECT_HideMsg'
+						},
+						success: function(data, textStatus, XMLHttpRequest){
+							
+							jQuery("#<?php echo esc_attr($class_name);?>-upgradeMsg").hide();
+							
+						},  
+						error: function(MLHttpRequest, textStatus, errorThrown){
+							alert(errorThrown);
+						}
+					});
+			  });
+
+			});
+			</script>
+<?php
+}
+
 function P404REDIRECT_get_current_URL()
 {
 	$prt = $_SERVER['SERVER_PORT'];
@@ -76,48 +72,7 @@ function P404REDIRECT_get_current_URL()
 
 }
 
-//---------------------------------------------------- 
-
-
-function P404REDIRECT_get_current_parameters($remove_parameter="")
-{	
-	
-	if($_SERVER['QUERY_STRING']!='')
-	{
-		$qry = '?' . urldecode($_SERVER['QUERY_STRING']);
-
-		if(is_array($remove_parameter))
-		{
-			for($i=0;$i<count($remove_parameter);$i++)
-			{
-				if(array_key_exists($remove_parameter[$i],$_GET)){
-    				$string_remove = '&' . $remove_parameter[$i] . "=" . filter_var($_GET[$remove_parameter[$i]], FILTER_SANITIZE_URL);
-    				$qry=str_replace($string_remove,"",$qry);
-    				$string_remove = '?' . $remove_parameter[$i] . "=" . filter_var($_GET[$remove_parameter[$i]], FILTER_SANITIZE_URL);
-    				$qry=str_replace($string_remove,"",$qry);
-				}
-			}
-			
-		}else{		
-			if($remove_parameter!='')
-			{
-				if(array_key_exists($remove_parameter,$_GET)){
-				    $string_remove = '&' . $remove_parameter . "=" . filter_var($_GET[$remove_parameter], FILTER_SANITIZE_URL);
-				    $qry=str_replace($string_remove,"",$qry);
-				    $string_remove = '?' . $remove_parameter . "=" . filter_var($_GET[$remove_parameter], FILTER_SANITIZE_URL);
-				    $qry=str_replace($string_remove,"",$qry);
-				}
-			}
-		}
-                
-		return strip_tags(filter_var($qry, FILTER_SANITIZE_URL));
-	}else
-	{
-		return "";
-	}
-} 
-
-//-----------------------------------------------------
+//----------------------------------------------------
 
 function P404REDIRECT_init_my_options()
 {	
@@ -125,9 +80,9 @@ function P404REDIRECT_init_my_options()
 	$options = array();
 	$options['p404_redirect_to']= site_url();
 	$options['p404_status']= '1';
-        $options['links']= 0;
-        $options['install_date'] = date("Y-m-d h:i a");
-        $options['redirected_links'] = array();
+    $options['links']= 0;
+    $options['install_date'] = date("Y-m-d h:i a");
+    $options['redirected_links'] = array();
 	update_option(OPTIONS404,$options);
 } 
 
@@ -197,38 +152,35 @@ function P404REDIRECT_get_my_options()
 }
 
 //---------------------------------------------------- 
-
 function P404REDIRECT_option_msg($msg)
 {	
-	echo '<div id="message" class="updated"><p>' . $msg . '</p></div>';		
+	echo '<div id="message" class="updated"><p>' . esc_attr($msg) . '</p></div>';		
 }
 
 //---------------------------------------------------- 
-
 function P404REDIRECT_info_option_msg($msg)
 {	
-	echo '<div id="message" class="updated"><p><div class="info_icon"></div> ' . $msg . '</p></div>';		
+	echo '<div id="message" class="updated"><p><div class="info_icon"></div> ' . esc_attr($msg) . '</p></div>';		
 }
 
 //---------------------------------------------------- 
-
 function P404REDIRECT_warning_option_msg($msg) 
 {	
-	echo '<div id="message" class="error"><p><div class="warning_icon"></div> ' . $msg . '</p></div>';		
+	echo '<div id="message" class="error"><p><div class="warning_icon"></div> ' . esc_attr($msg) . '</p></div>';		
 }
 
 //---------------------------------------------------- 
 
 function P404REDIRECT_success_option_msg($msg)
 {	
-	echo '<div id="message" class="updated"><p><div class="success_icon"></div> ' . $msg . '</p></div>';		
+	echo '<div id="message" class="updated"><p><div class="success_icon"></div> ' . esc_attr($msg) . '</p></div>';		
 }
 
 //---------------------------------------------------- 
 
 function P404REDIRECT_failure_option_msg($msg)
 {	
-	echo '<div id="message" class="error"><p><div class="failure_icon"></div> ' . $msg . '</p></div>';		
+	echo '<div id="message" class="error"><p><div class="failure_icon"></div> ' . esc_attr($msg) . '</p></div>';		
 }
 
 
@@ -248,3 +200,4 @@ function P404REDIRECT_there_is_cache()
     }
     return '';
 }
+

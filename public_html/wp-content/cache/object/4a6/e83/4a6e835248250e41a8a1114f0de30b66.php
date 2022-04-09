@@ -1,0 +1,1 @@
+¤û6b<?php exit; ?>a:1:{s:7:"content";s:62:"{{WP_CONTENT_DIR}}/themes/porto/woocommerce/cart/mini-cart.php";}

@@ -1,0 +1,10 @@
+��6b<?php exit; ?>a:1:{s:7:"content";O:8:"stdClass":23:{s:2:"ID";s:4:"2242";s:11:"post_author";s:1:"2";s:9:"post_date";s:19:"2021-03-22 15:36:58";s:13:"post_date_gmt";s:19:"2021-03-22 10:06:58";s:12:"post_content";s:802:"This watch has a brushed stainless steel case, octagonal brushed bezel 8 screws fixed, scratch-resistant anti-glare sapphire crystal glass mirror, blue dial with MégaTapisserie large plaid decoration, white sub-dial, three-dimensional bar. The standard black and black oak pointers are covered with a luminous coating, and the square window between 4 and 5 points displays the calendar. Stainless steel crown and chronograph button, hexagonal crown engraving AP logo. Stainless steel brushed bottom shell, matte bottom circle engraving “ROYAL OAK” three-dimensional polishing treatment is very bright. Swiss ETA7750 chronograph automatic movement, the movement function is the same as the original. Stainless steel brushed strap with steel folding clasp. The buckle engraves the AP logo.
+
+&nbsp;";s:10:"post_title";s:66:"Audemars Piguet Royal Oak Chronograph Blue Dial First Copy Replica";s:12:"post_excerpt";s:338:"<ul>
+ 	<li><strong>Brand</strong> Audemars Piguet</li>
+ 	<li><strong>Range</strong> Royal Oak</li>
+ 	<li><strong>Model</strong> 26331ST.OO.1220ST.01</li>
+ 	<li><strong>Gender</strong> Men's</li>
+ 	<li><strong>Movement</strong> Swiss ETA7750 chronograph automatic movement</li>
+ 	<li><strong>Case Size</strong> 41 mm</li>
+</ul>";s:11:"post_status";s:7:"publish";s:14:"comment_status";s:4:"open";s:11:"ping_status";s:6:"closed";s:13:"post_password";s:0:"";s:9:"post_name";s:66:"audemars-piguet-royal-oak-chronograph-blue-dial-first-copy-replica";s:7:"to_ping";s:0:"";s:6:"pinged";s:0:"";s:13:"post_modified";s:19:"2021-03-27 18:34:38";s:17:"post_modified_gmt";s:19:"2021-03-27 13:04:38";s:21:"post_content_filtered";s:0:"";s:11:"post_parent";s:1:"0";s:4:"guid";s:58:"https://watchotimeonline.in/?post_type=product&#038;p=2242";s:10:"menu_order";s:1:"0";s:9:"post_type";s:7:"product";s:14:"post_mime_type";s:0:"";s:13:"comment_count";s:1:"0";}}
