@@ -1,0 +1,10 @@
+whapi.io.log
+wp-content/litespeed/avatar/*
+wp-content/litespeed/css/*
+wp-content/uploads/sucuri/*
+insta
+insta/*
+insta/logs/*
+insta/stock/*
+whapi/webhook.log
+wp-content/uploads/wc-logs/*
